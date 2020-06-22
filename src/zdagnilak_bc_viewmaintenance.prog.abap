@@ -10,7 +10,7 @@
 *& in other parameter transactions.
 *&---------------------------------------------------------------------*
 
-report zbc_viewmaintenance.
+report zdagnilak_bc_viewmaintenance.
 
 *&---------------------------------------------------------------------*
 *& Data

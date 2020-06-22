@@ -13,7 +13,7 @@
 * <userid>    yyyymmdd  <short description of the change>
 ************************************************************************
 
-report zalv_layout_download line-size 255.
+report zdagnilak_alv_layout_download line-size 255.
 
 tables: ltdx.
 
