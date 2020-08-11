@@ -54,7 +54,7 @@ form main.
 
   if sy-subrc eq 0 and
      lv_msg is initial.
-    message 'Program kopyalandı' type 'S'.
+    write |Program { p_name } kopyalandı| color col_positive.
   else.
     message lv_msg type 'I' display like 'E'.
   endif.
