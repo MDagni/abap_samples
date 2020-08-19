@@ -1,12 +1,23 @@
 report zdagnilak_copy_program_rfc.
 
+tables: sscrfields.
+
 parameters: p_name type syrepid obligatory memory id zcopy_rid.
 selection-screen skip.
 parameters: p_destin type rfcdest obligatory memory id vers_dest.
 
-start-of-selection.
+*&---------------------------------------------------------------------*
+*& AT SELECTION-SCREEN
+*&---------------------------------------------------------------------*
+at selection-screen.
+  "RFC hedefinin yalnızca bir kere şifre sorması için çalıştırma burada yapıldı.
+  if sscrfields-ucomm eq 'ONLI'.
+    perform main.
+    clear sscrfields-ucomm.
+  endif.
 
-  perform main.
+start-of-selection.
+  "nothing
 
 *&---------------------------------------------------------------------*
 *&      Form  main
@@ -54,7 +65,7 @@ form main.
 
   if sy-subrc eq 0 and
      lv_msg is initial.
-    write |Program { p_name } kopyalandı| color col_positive.
+    message |Program { p_name } kopyalandı| type 'S'.
   else.
     message lv_msg type 'I' display like 'E'.
   endif.
