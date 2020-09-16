@@ -42,9 +42,9 @@ form main.
 
   read report p_name into lt_code.
 
-  if lv_progty eq '1'.
+  if lv_progty ca '1MFS'.
     read textpool p_name into lt_textpool language sy-langu.
-    lv_description = lt_textpool[ id = 'R' ]-entry.
+    lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
   endif.
 
   call function 'SIW_RFC_WRITE_REPORT'
@@ -63,11 +63,32 @@ form main.
       system_failure        = 1 message lv_msg
       communication_failure = 2 message lv_msg.
 
-  if sy-subrc eq 0 and
-     lv_msg is initial.
-    message |Program { p_name } kopyalandı| type 'S'.
-  else.
+  if sy-subrc ne 0 or
+     lv_msg is not initial.
     message lv_msg type 'I' display like 'E'.
+    return.
   endif.
+
+  if lt_textpool is not initial.
+    call function 'SIW_RFC_WRITE_TEXTPOOL'
+      destination p_destin
+      exporting
+        i_prog                = p_name
+        i_langu               = sy-langu
+        i_tab_textpool        = lt_textpool
+      importing
+        e_str_exception       = lv_msg
+      exceptions
+        system_failure        = 1 message lv_msg
+        communication_failure = 2 message lv_msg.
+
+    if sy-subrc ne 0 or
+       lv_msg is not initial.
+      message lv_msg type 'I' display like 'E'.
+      return.
+    endif.
+  endif.
+
+  message |Program { p_name } kopyalandı| type 'S'.
 
 endform.          " main
