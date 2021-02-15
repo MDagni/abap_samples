@@ -40,30 +40,30 @@ start-of-selection.
 
 form get_data.
 
-  field-symbols <tabfl> type standard table.
-
-  data: l_bin_table type tsfixml,
+  data: lt_xtab     type tsfixml,
         lv_xcontent type xstring.
+
+  field-symbols: <lt_table> type standard table.
 
   cl_gui_frontend_services=>gui_upload(
          exporting
-           filename     = |{ p_file }|
+           filename     = conv #( p_file )
            filetype     = 'BIN'
          importing
-           filelength  =  data(l_bin_length)
+           filelength  =  data(lv_filesize)
          changing
-           data_tab     = l_bin_table[]
+           data_tab     = lt_xtab
          exceptions
            others       = 1 ).
 
   if sy-subrc = 0.
     call function 'SCMS_BINARY_TO_XSTRING'
       exporting
-        input_length = l_bin_length
+        input_length = lv_filesize
       importing
         buffer       = lv_xcontent
       tables
-        binary_tab   = l_bin_table[]
+        binary_tab   = lt_xtab
       exceptions
         failed       = 1
         others       = 2.
@@ -75,20 +75,17 @@ form get_data.
   endif.
 
   try.
-      data(lr_fdt_xl) = new cl_fdt_xl_spreadsheet(
+      data(lo_excel) = new cl_fdt_xl_spreadsheet(
                               document_name = conv #( p_file )
                               xdocument     = lv_xcontent ) .
 
-      lr_fdt_xl->if_fdt_doc_spreadsheet~get_worksheet_names( importing
-                                                                worksheet_names = data(lt_worksheets) ).
+      lo_excel->if_fdt_doc_spreadsheet~get_worksheet_names( importing worksheet_names = data(lt_worksheets) ).
 
-      data(lr_dref) = lr_fdt_xl->if_fdt_doc_spreadsheet~get_itab_from_worksheet(
-                                              lt_worksheets[ 1 ] ).
+      data(lr_table) = lo_excel->if_fdt_doc_spreadsheet~get_itab_from_worksheet( lt_worksheets[ 1 ] ).
 
-      assign lr_dref->*  to <tabfl>.
+      assign lr_table->*  to <lt_table>.
 
-
-      gr_log->add_text( iv_type = 'I' iv_text = | Dosyadan { lines( <tabfl> ) - 1 } satır okundu.| ).
+      gr_log->add_text( iv_type = 'I' iv_text = | Dosyadan { lines( <lt_table> ) - 1 } satır okundu.| ).
 
     catch cx_fdt_excel_core into data(lr_err).
       gr_log->add_text( iv_type = 'E' iv_text = |Excel dosya yüklenemedi: { lr_err->get_text( ) }| ).
@@ -97,9 +94,10 @@ form get_data.
   endtry .
 
 * Yüklenen dosyanın içeriğini ekranda göster
-  cl_demo_output=>write( <tabfl> ).
+  cl_demo_output=>write( <lt_table> ).
 
   data(lv_html) = cl_demo_output=>get( ).
+
   cl_abap_browser=>show_html(
       title        = |Dosya datalar|
       size         = cl_abap_browser=>xlarge
