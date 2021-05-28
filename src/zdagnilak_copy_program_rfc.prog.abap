@@ -2,7 +2,11 @@ report zdagnilak_copy_program_rfc.
 
 tables: sscrfields.
 
-parameters: p_name type syrepid obligatory memory id zcopy_rid.
+parameters: program  radiobutton group prg,
+            p_name   type syrepid memory id zcopy_name,
+            function radiobutton group prg,
+            p_func   type tfdir-funcname memory id zcopy_func.
+
 selection-screen skip.
 parameters: p_destin type rfcdest obligatory memory id vers_dest.
 
@@ -30,6 +34,21 @@ form main.
         lt_textpool    type textpool_table,
         lv_description type repti,
         lv_msg         type siw_str_msg.
+
+  if function eq abap_true.
+    call function 'FUNCTION_EXISTS'
+      exporting
+        funcname           = p_func
+      importing
+        include            = p_name
+      exceptions
+        function_not_exist = 1
+        others             = 2.
+    if sy-subrc <> 0.
+      message 'Fonksiyon mevcut değil!' type 'I'.
+      return.
+    endif.
+  endif.
 
   select single subc into @data(lv_progty)
          from trdir

@@ -17,6 +17,18 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>FUNCTION</KEY>
+     <ENTRY>Function Module</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PROGRAM</KEY>
+     <ENTRY>Program</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_DESTIN</KEY>
      <ENTRY>.</ENTRY>
      <LENGTH>18</LENGTH>
@@ -24,16 +36,16 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_NAME</KEY>
+     <KEY>P_FUNC</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>19</LENGTH>
+     <LENGTH>9</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_PROGTY</KEY>
+     <KEY>P_NAME</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>20</LENGTH>
+     <LENGTH>19</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
