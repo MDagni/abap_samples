@@ -32,44 +32,48 @@ form main.
 
   data: lt_code        type siw_tab_code,
         lt_textpool    type textpool_table,
+        lv_name        type syrepid,
         lv_description type repti,
         lv_msg         type siw_str_msg.
 
-  if function eq abap_true.
-    call function 'FUNCTION_EXISTS'
-      exporting
-        funcname           = p_func
-      importing
-        include            = p_name
-      exceptions
-        function_not_exist = 1
-        others             = 2.
-    if sy-subrc <> 0.
-      message 'Fonksiyon mevcut değil!' type 'I'.
-      return.
-    endif.
-  endif.
+  case abap_true.
+    when program.
+      lv_name = p_name.
+    when function.
+      call function 'FUNCTION_EXISTS'
+        exporting
+          funcname           = p_func
+        importing
+          include            = lv_name
+        exceptions
+          function_not_exist = 1
+          others             = 2.
+      if sy-subrc <> 0.
+        message 'Fonksiyon mevcut değil!' type 'I'.
+        return.
+      endif.
+  endcase.
 
   select single subc into @data(lv_progty)
          from trdir
-         where name eq @p_name.
+         where name eq @lv_name.
 
   if sy-subrc ne 0.
     message 'Program bulunamadı!' type 'I'.
     return.
   endif.
 
-  read report p_name into lt_code.
+  read report lv_name into lt_code.
 
   if lv_progty ca '1MFS'.
-    read textpool p_name into lt_textpool language sy-langu.
+    read textpool lv_name into lt_textpool language sy-langu.
     lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
   endif.
 
   call function 'SIW_RFC_WRITE_REPORT'
     destination p_destin
     exporting
-      i_name                = p_name
+      i_name                = lv_name
       i_tab_code            = lt_code
       i_extension           = ''
       i_object              = ''
@@ -92,7 +96,7 @@ form main.
     call function 'SIW_RFC_WRITE_TEXTPOOL'
       destination p_destin
       exporting
-        i_prog                = p_name
+        i_prog                = lv_name
         i_langu               = sy-langu
         i_tab_textpool        = lt_textpool
       importing
@@ -108,6 +112,6 @@ form main.
     endif.
   endif.
 
-  message |Program { p_name } kopyalandı| type 'S'.
+  message |Program { lv_name } kopyalandı| type 'S'.
 
 endform.          " main
