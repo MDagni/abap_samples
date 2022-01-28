@@ -1,22 +1,24 @@
 *&---------------------------------------------------------------------*
-*& Report  ZBC_VIEWMAINTENANCE
-*& Create by Mehmet Dagnilak, 21.07.2006
+*& Report  ZBC_SM30
+*& Created by Mehmet Dağnilak, 21.07.2006
 *&---------------------------------------------------------------------*
+*& SM30 ekranını seçim kriterleriyle çağır
+*&
 *& Calls View Maintenance screen for given table/view, with a
 *& selection-screen for the given fields and obligatory fields
 *& (maintenance attribute S in view definition).
 *&
 *& You can create a transaction called ZSM30 for this report to use it
-*& in other parameter transactions.
+*& in other parameter transactions instead of SM30/SM31.
 *&---------------------------------------------------------------------*
 
-report zdagnilak_bc_viewmaintenance.
+report zbc_sm30.
 
 *&---------------------------------------------------------------------*
 *& Data
 *&---------------------------------------------------------------------*
 tables: dd27s, dd03l.
-data: sellist type vimsellist occurs 0 with header line,
+data: sellist        type table of vimsellist with header line,
       pfield01(30),
       pfield02(30),
       pfield03(30),
@@ -32,12 +34,12 @@ data: sellist type vimsellist occurs 0 with header line,
       selfield03(30),
       selfield04(30),
       selfield05(30),
-      pmemor01 like dd04l-memoryid,
-      pmemor02 like dd04l-memoryid,
-      pmemor03 like dd04l-memoryid,
-      pmemor04 like dd04l-memoryid,
-      pmemor05 like dd04l-memoryid,
-      typec(45) type c.
+      pmemor01       like dd04l-memoryid,
+      pmemor02       like dd04l-memoryid,
+      pmemor03       like dd04l-memoryid,
+      pmemor04       like dd04l-memoryid,
+      pmemor05       like dd04l-memoryid,
+      typec(45)      type c.
 ranges: r_typec for typec.
 field-symbols: <value> type any.
 
@@ -61,7 +63,7 @@ parameters: viewname like dd03l-tabname obligatory value check,
             text03   type text79_d,
             text04   type text79_d,
             text05   type text79_d,
-            action type c default 'U'.
+            action   type c default 'U'.
 selection-screen end of block bl0.
 
 *&---------------------------------------------------------------------*
@@ -195,10 +197,10 @@ start-of-selection.
            and as4vers eq ''.
 
   case action.
-    when 'U'. concatenate 'Maintain "' tabtitle '"' into tabtitle.
-    when 'S'. concatenate 'Display "' tabtitle '"' into tabtitle.
+    when 'U'. concatenate '"' tabtitle '" görünümünü değiştir' into tabtitle.
+    when 'S'. concatenate '"' tabtitle '" görünümünü görüntüle' into tabtitle.
     when others.
-      message 'Action can be U or S' type 'I'.
+      message 'Action U veya S olabilir' type 'I'.
       exit.
   endcase.
 
