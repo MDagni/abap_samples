@@ -23,9 +23,21 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>METHOD</KEY>
+     <ENTRY>Class method</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>PROGRAM</KEY>
      <ENTRY>Program</ENTRY>
      <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_CLASS</KEY>
+     <ENTRY>Class</ENTRY>
+     <LENGTH>13</LENGTH>
     </item>
     <item>
      <ID>S</ID>
@@ -38,8 +50,14 @@
      <ID>S</ID>
      <KEY>P_FUNC</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>20</LENGTH>
      <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_METHOD</KEY>
+     <ENTRY>Method</ENTRY>
+     <LENGTH>14</LENGTH>
     </item>
     <item>
      <ID>S</ID>

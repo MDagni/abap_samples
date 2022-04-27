@@ -2,10 +2,15 @@ report zdagnilak_copy_program_rfc.
 
 tables: sscrfields.
 
-parameters: program  radiobutton group prg,
-            p_name   type syrepid memory id zcopy_name,
-            function radiobutton group prg,
+parameters: program radiobutton group prg,
+            p_name  type syrepid memory id zcopy_name.
+selection-screen skip.
+parameters: function radiobutton group prg,
             p_func   type tfdir-funcname memory id zcopy_func.
+selection-screen skip.
+parameters: method   radiobutton group prg,
+            p_class  type seoclsname memory id zcopy_class,
+            p_method type seocpdname memory id zcopy_method.
 
 selection-screen skip.
 parameters: p_destin type rfcdest obligatory memory id vers_dest.
@@ -34,11 +39,13 @@ form main.
         lt_textpool    type textpool_table,
         lv_name        type syrepid,
         lv_description type repti,
-        lv_msg         type siw_str_msg.
+        ls_exception   type siw_str_msg,
+        lv_msg         type text255.
 
   case abap_true.
     when program.
       lv_name = p_name.
+
     when function.
       call function 'FUNCTION_EXISTS'
         exporting
@@ -52,6 +59,26 @@ form main.
         message 'Fonksiyon mevcut değil!' type 'I'.
         return.
       endif.
+
+    when method.
+      cl_oo_classname_service=>get_method_include(
+        exporting
+          mtdkey                = value #( clsname = p_class cpdname = p_method )
+          with_enhancements     = abap_true
+          with_alias_resolution = abap_true
+        receiving
+          result                = lv_name
+        exceptions
+          class_not_existing    = 1
+          method_not_existing   = 2 ).
+
+      if sy-subrc <> 0.
+        message id sy-msgid type 'I' number sy-msgno
+          with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4
+          display like sy-msgty.
+        return.
+      endif.
+
   endcase.
 
   select single subc into @data(lv_progty)
@@ -70,25 +97,49 @@ form main.
     lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
   endif.
 
-  call function 'SIW_RFC_WRITE_REPORT'
-    destination p_destin
-    exporting
-      i_name                = lv_name
-      i_tab_code            = lt_code
-      i_extension           = ''
-      i_object              = ''
-      i_objname             = ''
-      i_progtype            = lv_progty
-      i_description         = lv_description
-    importing
-      e_str_exception       = lv_msg
-    exceptions
-      system_failure        = 1 message lv_msg
-      communication_failure = 2 message lv_msg.
+  case abap_true.
+    when program
+      or function.
+
+      call function 'SIW_RFC_WRITE_REPORT'
+        destination p_destin
+        exporting
+          i_name                = lv_name
+          i_tab_code            = lt_code
+          i_extension           = ''
+          i_object              = ''
+          i_objname             = ''
+          i_progtype            = lv_progty
+          i_description         = lv_description
+        importing
+          e_str_exception       = ls_exception
+        exceptions
+          system_failure        = 1 message lv_msg
+          communication_failure = 2 message lv_msg.
+
+    when method.
+      call function 'SIW_RFC_WRITE_CLASS_METHOD'
+        destination p_destin
+        exporting
+          i_clsname             = p_class
+          i_methodname          = p_method
+          i_tab_code            = lt_code
+        importing
+          e_str_exception       = ls_exception
+        exceptions
+          system_failure        = 1 message lv_msg
+          communication_failure = 2 message lv_msg.
+
+  endcase.
 
   if sy-subrc ne 0 or
      lv_msg is not initial.
     message lv_msg type 'I' display like 'E'.
+    return.
+  endif.
+
+  if ls_exception is not initial.
+    message ls_exception-msgstring type 'I' display like 'E'.
     return.
   endif.
 
