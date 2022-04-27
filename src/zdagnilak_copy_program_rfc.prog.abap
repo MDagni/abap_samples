@@ -2,6 +2,7 @@ report zdagnilak_copy_program_rfc.
 
 tables: sscrfields.
 
+selection-screen begin of block b1 with frame.
 parameters: program radiobutton group prg,
             p_name  type syrepid memory id zcopy_name.
 selection-screen skip.
@@ -11,9 +12,11 @@ selection-screen skip.
 parameters: method   radiobutton group prg,
             p_class  type seoclsname memory id zcopy_class,
             p_method type seocpdname memory id zcopy_method.
+selection-screen end of block b1.
 
-selection-screen skip.
+selection-screen begin of block b2 with frame.
 parameters: p_destin type rfcdest obligatory memory id vers_dest.
+selection-screen end of block b2.
 
 *&---------------------------------------------------------------------*
 *& AT SELECTION-SCREEN
