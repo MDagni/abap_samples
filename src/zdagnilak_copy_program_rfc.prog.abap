@@ -18,10 +18,18 @@ selection-screen begin of block b2 with frame.
 parameters: p_destin type rfcdest obligatory memory id vers_dest.
 selection-screen end of block b2.
 
+data: gv_debug type i.
+
 *&---------------------------------------------------------------------*
 *& AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 at selection-screen.
+  if sscrfields-ucomm eq 'DEBUG'.
+    gv_debug = 1 - gv_debug.
+    message |Debug mode { gv_debug }| type 'S'.
+    clear sscrfields-ucomm.
+  endif.
+
   "RFC hedefinin yalnızca bir kere şifre sorması için çalıştırma burada yapıldı.
   if sscrfields-ucomm eq 'ONLI'.
     perform main.
@@ -100,6 +108,10 @@ form main.
     lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
   endif.
 
+  if gv_debug = 1.
+    break-point.
+  endif.
+
   case abap_true.
     when program
       or function.
@@ -147,6 +159,11 @@ form main.
   endif.
 
   if lt_textpool is not initial.
+
+    if gv_debug = 1.
+      break-point.
+    endif.
+
     call function 'SIW_RFC_WRITE_TEXTPOOL'
       destination p_destin
       exporting
@@ -154,7 +171,7 @@ form main.
         i_langu               = sy-langu
         i_tab_textpool        = lt_textpool
       importing
-        e_str_exception       = lv_msg
+        e_str_exception       = ls_exception
       exceptions
         system_failure        = 1 message lv_msg
         communication_failure = 2 message lv_msg.
@@ -164,6 +181,12 @@ form main.
       message lv_msg type 'I' display like 'E'.
       return.
     endif.
+
+    if ls_exception is not initial.
+      message ls_exception-msgstring type 'I' display like 'E'.
+      return.
+    endif.
+
   endif.
 
   message |Program { lv_name } kopyalandı| type 'S'.
