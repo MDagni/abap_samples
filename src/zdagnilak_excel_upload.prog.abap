@@ -1,4 +1,14 @@
-*** GUI/OLE bağımsız Excel Upload örneği
+************************************************************************
+* Developer        : Mehmet Dağnilak
+* Description      : Background'da çalışabilen Excel Upload örneği
+************************************************************************
+* History
+*----------------------------------------------------------------------*
+* User-ID     Date      Description
+*----------------------------------------------------------------------*
+* MDAGNILAK   20210212  Program created
+* <userid>    yyyymmdd  <short description of the change>
+************************************************************************
 report zdagnilak_excel_upload.
 
 selection-screen begin of block b1 with frame.
