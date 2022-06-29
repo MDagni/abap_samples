@@ -1,3 +1,14 @@
+************************************************************************
+* Developer        : Mehmet Dağnilak
+* Description      : Fuzzy search örneği
+************************************************************************
+* History
+*----------------------------------------------------------------------*
+* User-ID     Date      Description
+*----------------------------------------------------------------------*
+* MDAGNILAK   20200420  Program created
+* <userid>    yyyymmdd  <short description of the change>
+************************************************************************
 report zdagnilak_fuzzy.
 
 parameters: p_maktx type makt-maktx default '20555'. "205/55 vs şeklindeki tüm malzemeleri getirmesi gerekiyor
