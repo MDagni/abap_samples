@@ -1,5 +1,4 @@
 ************************************************************************
-* Object ID,FD name:
 * Developer        : Mehmet Dağnilak
 * Description      :
 *   Bir sistemdeki ALV layout'larının diğer bir sisteme taşınması
