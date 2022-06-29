@@ -1,3 +1,15 @@
+************************************************************************
+* Developer        : Mehmet Dağnilak
+* Description      : Programı RFC aracılığıyla kopyala
+************************************************************************
+* History
+*----------------------------------------------------------------------*
+* User-ID     Date      Description
+*----------------------------------------------------------------------*
+* MDAGNILAK   20200722  Program created
+* <userid>    yyyymmdd  <short description of the change>
+************************************************************************
+
 report zdagnilak_copy_program_rfc.
 
 tables: sscrfields.
