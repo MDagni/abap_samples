@@ -33,21 +33,10 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_DISABL</KEY>
-     <ENTRY>Paralel olmasın</ENTRY>
-     <LENGTH>23</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_ITEMS</KEY>
-     <ENTRY>Kalem sayısı</ENTRY>
-     <LENGTH>20</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_ORDERS</KEY>
-     <ENTRY>Sipariş sayısı</ENTRY>
-     <LENGTH>22</LENGTH>
+     <KEY>S_CARRID</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
   </asx:values>

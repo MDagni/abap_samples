@@ -5,17 +5,23 @@
 
 program zdagnilak_screenless_alv.
 
+tables: sflight.
 data: o_alv     type ref to cl_gui_alv_grid,
       t_sflight type table of sflight.
 
+* Normal selection screen
+select-options: s_carrid for sflight-carrid.
+
 * Definition of an empty selection screen
 selection-screen: begin of screen 1001,
-                   end of screen 1001.
+                    end of screen 1001.
 
 start-of-selection.
 
 * Filling the data table for the ALV
-  select * from sflight into table t_sflight.
+  select * from sflight
+    into table t_sflight
+    where carrid in s_carrid.
 
 * Creation of the alv object directly attached to the first screen
   create object o_alv
