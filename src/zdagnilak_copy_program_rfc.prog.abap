@@ -15,8 +15,9 @@ report zdagnilak_copy_program_rfc.
 tables: sscrfields.
 
 selection-screen begin of block b1 with frame.
-parameters: program radiobutton group prg,
-            p_name  type syrepid memory id zcopy_name.
+parameters: program  radiobutton group prg,
+            p_prog   type syrepid memory id zcopy_name,
+            p_notext as checkbox default 'X'.
 selection-screen skip.
 parameters: function radiobutton group prg,
             p_func   type tfdir-funcname memory id zcopy_func.
@@ -58,67 +59,63 @@ start-of-selection.
 *----------------------------------------------------------------------*
 form main.
 
-  data: lt_code        type siw_tab_code,
+  data: lo_reader      type ref to if_siw_repository_reader,
+        lt_code        type siw_tab_code,
         lt_textpool    type textpool_table,
-        lv_name        type syrepid,
+        lv_incname     type syrepid,
         lv_description type repti,
         ls_exception   type siw_str_msg,
         lv_msg         type text255.
 
-  case abap_true.
-    when program.
-      lv_name = p_name.
+  lo_reader = cl_siw_resource_access=>s_get_instance( ).
 
-    when function.
-      call function 'FUNCTION_EXISTS'
-        exporting
-          funcname           = p_func
-        importing
-          include            = lv_name
-        exceptions
-          function_not_exist = 1
-          others             = 2.
-      if sy-subrc <> 0.
-        message 'Fonksiyon mevcut değil!' type 'I'.
-        return.
-      endif.
+  try.
 
-    when method.
-      cl_oo_classname_service=>get_method_include(
-        exporting
-          mtdkey                = value #( clsname = p_class cpdname = p_method )
-          with_enhancements     = abap_true
-          with_alias_resolution = abap_true
-        receiving
-          result                = lv_name
-        exceptions
-          class_not_existing    = 1
-          method_not_existing   = 2 ).
+      case abap_true.
+        when program.
+          data(ls_trdir) = lo_reader->read_trdir( p_prog ).
+          if ls_trdir is initial.
+            message 'Program mevcut değil' type 'I'.
+            return.
+          endif.
 
-      if sy-subrc <> 0.
-        message id sy-msgid type 'I' number sy-msgno
-          with sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4
-          display like sy-msgty.
-        return.
-      endif.
+          lv_incname = p_prog.
+          lt_code = lo_reader->read_report( p_prog ).
 
-  endcase.
+          if ls_trdir-subc ca '1MFS'.
+            data(lt_textall) = lo_reader->read_textpool( i_prog      = p_prog
+                                                         i_tab_langu = value #( ( spras = sy-langu ) ) ).
 
-  select single subc into @data(lv_progty)
-         from trdir
-         where name eq @lv_name.
+            lt_textpool = value #( lt_textall[ 1 ]-texts optional ).
+            lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
 
-  if sy-subrc ne 0.
-    message 'Program bulunamadı!' type 'I'.
-    return.
-  endif.
+            if p_notext eq abap_true.
+              refresh lt_textpool.
+            endif.
+          endif.
 
-  read report lv_name into lt_code.
+        when function.
+          data(ls_funcinfo) = lo_reader->read_funcinfo( p_func ).
+          lv_incname = ls_funcinfo-include.
+          ls_trdir-subc = 'I'.
+          lt_code = lo_reader->read_report( lv_incname ).
 
-  if lv_progty ca '1MFS'.
-    read textpool lv_name into lt_textpool language sy-langu.
-    lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
-  endif.
+        when method.
+          lo_reader->read_method_source(
+            exporting
+              i_clsname    = p_class
+              i_methodname = p_method
+            importing
+              e_tab_code   = lt_code
+              e_incname    = lv_incname ).
+
+      endcase.
+
+    catch cx_siw_resource_failure into data(lx_rf).
+      message lx_rf type 'I' display like 'E'.
+      return.
+  endtry.
+
 
   if gv_debug = 1.
     break-point.
@@ -131,12 +128,12 @@ form main.
       call function 'SIW_RFC_WRITE_REPORT'
         destination p_destin
         exporting
-          i_name                = lv_name
+          i_name                = lv_incname
           i_tab_code            = lt_code
           i_extension           = ''
           i_object              = ''
           i_objname             = ''
-          i_progtype            = lv_progty
+          i_progtype            = ls_trdir-subc
           i_description         = lv_description
         importing
           e_str_exception       = ls_exception
@@ -179,7 +176,7 @@ form main.
     call function 'SIW_RFC_WRITE_TEXTPOOL'
       destination p_destin
       exporting
-        i_prog                = lv_name
+        i_prog                = lv_incname
         i_langu               = sy-langu
         i_tab_textpool        = lt_textpool
       importing
@@ -201,6 +198,6 @@ form main.
 
   endif.
 
-  message |Program { lv_name } kopyalandı| type 'S'.
+  message |Program { lv_incname } kopyalandı| type 'S'.
 
 endform.          " main

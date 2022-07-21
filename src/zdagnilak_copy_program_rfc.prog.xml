@@ -49,9 +49,8 @@
     <item>
      <ID>S</ID>
      <KEY>P_FUNC</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>20</LENGTH>
-     <SPLIT>D</SPLIT>
+     <ENTRY>Fonksiyon adı</ENTRY>
+     <LENGTH>21</LENGTH>
     </item>
     <item>
      <ID>S</ID>
@@ -61,10 +60,15 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_NAME</KEY>
-     <ENTRY>.</ENTRY>
+     <KEY>P_NOTEXT</KEY>
+     <ENTRY>Metinler olmadan</ENTRY>
+     <LENGTH>24</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_PROG</KEY>
+     <ENTRY>Program adı</ENTRY>
      <LENGTH>19</LENGTH>
-     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
   </asx:values>
