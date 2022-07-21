@@ -1,6 +1,6 @@
 ************************************************************************
 * Developer        : Mehmet Dağnilak
-* Description      :
+* Description      : ALV Layout download/upload
 *   Bir sistemdeki ALV layout'larının diğer bir sisteme taşınması
 *   işlemini yapar. Canlıdan Dev/Test sistemlerine taşınma yapılabilir.
 ************************************************************************
