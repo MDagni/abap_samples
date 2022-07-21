@@ -1,18 +1,25 @@
-*&---------------------------------------------------------------------*
-*& Report  ZBC_SM30
-*& Created by Mehmet Dağnilak, 21.07.2006
-*&---------------------------------------------------------------------*
-*& SM30 ekranını seçim kriterleriyle çağır
-*&
-*& Calls View Maintenance screen for given table/view, with a
-*& selection-screen for the given fields and obligatory fields
-*& (maintenance attribute S in view definition).
-*&
-*& You can create a transaction called ZSM30 for this report to use it
-*& in other parameter transactions instead of SM30/SM31.
-*&---------------------------------------------------------------------*
+************************************************************************
+* Developer        : Mehmet Dağnilak
+* Description      : SM30 View Maintenance
+*
+* SM30 ekranını seçim kriterleriyle çağır
+*
+* Calls View Maintenance screen for given table/view, with a
+* selection-screen for the given fields and obligatory fields
+* (maintenance attribute S in view definition).
+*
+* You can create a transaction called ZSM30 for this report to use it
+* in other parameter transactions instead of SM30/SM31.
+************************************************************************
+* History
+*----------------------------------------------------------------------*
+* User-ID     Date      Description
+*----------------------------------------------------------------------*
+* MDAGNILAK   20060721  Program created
+* <userid>    yyyymmdd  <short description of the change>
+************************************************************************
 
-report zbc_sm30.
+report zbc_zsm30.
 
 *&---------------------------------------------------------------------*
 *& Data
