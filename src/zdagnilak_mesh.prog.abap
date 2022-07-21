@@ -10,7 +10,7 @@
 * <userid>    yyyymmdd  <short description of the change>
 ************************************************************************
 
-report zdagnilak_mesh_ex2in.
+report zdagnilak_mesh.
 
 perform main2.
 
