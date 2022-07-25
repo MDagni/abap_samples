@@ -13,31 +13,21 @@
     <item>
      <ID>R</ID>
      <ENTRY>Mesh association</ENTRY>
-     <LENGTH>41</LENGTH>
+     <LENGTH>16</LENGTH>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_B2B</KEY>
-     <ENTRY>B2B</ENTRY>
-     <LENGTH>11</LENGTH>
+     <KEY>P_BUKRS</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_BAYI</KEY>
-     <ENTRY>BAYI</ENTRY>
-     <LENGTH>12</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_CIS</KEY>
-     <ENTRY>CIS</ENTRY>
-     <LENGTH>11</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
-     <KEY>P_TEST</KEY>
-     <ENTRY>Test mode</ENTRY>
-     <LENGTH>17</LENGTH>
+     <KEY>P_GJAHR</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
   </asx:values>

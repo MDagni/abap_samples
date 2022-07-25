@@ -12,74 +12,93 @@
 
 report zdagnilak_mesh.
 
-perform main2.
+parameters: p_bukrs type bukrs obligatory default '0210' memory id buk,
+            p_gjahr type gjahr obligatory default '2014'.
+
+start-of-selection.
+  perform main.
 
 
 *&---------------------------------------------------------------------*
-*&      Form  main2
+*&      Form  main
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-form main2.
+form main.
 
-  types: begin of ty_bkpf,
-           belnr type belnr_d,
-           bukrs type bukrs,
-         end of ty_bkpf,
+  types:
+    "Belge tipi
+    begin of ty_bkpf,
+      bukrs type bukrs,
+      belnr type belnr_d,
+    end of ty_bkpf,
 
-         begin of ty_bseg,
-           belnr type belnr_d,
-           buzei type buzei,
-         end of ty_bseg,
+    "Kalem tipi
+    begin of ty_bseg,
+      belnr type belnr_d,
+      buzei type buzei,
+      sgtxt type sgtxt,
+    end of ty_bseg,
 
-         ty_t_bkpf type sorted table of ty_bkpf with unique key bukrs belnr
-                     with non-unique sorted key cle_belnr components belnr ,
-         ty_t_bseg type sorted table of ty_bseg with non-unique key belnr buzei,
+    "Belge tablosu
+    ty_t_bkpf type sorted table of ty_bkpf with unique key bukrs belnr
+              with non-unique sorted key docno components belnr,
+    "Kalem tablosu
+    ty_t_bseg type sorted table of ty_bseg with non-unique key belnr buzei,
 
-         begin of mesh ty_mesh,
-           head type ty_t_bkpf association my_items to item on belnr = belnr,
-           item type ty_t_bseg association my_header to head on belnr = belnr using key cle_belnr,
-         end of mesh ty_mesh.
+    "İlişki tanımı
+    begin of mesh ty_mesh,
+      heads type ty_t_bkpf association my_items  to items on belnr = belnr,
+      items type ty_t_bseg association my_header to heads on belnr = belnr using key docno,
+    end of mesh ty_mesh.
 
+  "Veri alanı
   data: ls_data type ty_mesh.
 
-  select belnr bukrs up to 10000 rows
-         into table ls_data-head
+  "Örnek veri
+  select bukrs belnr up to 10000 rows
+         into table ls_data-heads
          from bkpf
-         where bukrs = '0210'
-           and gjahr = '2014'
+         where bukrs = p_bukrs
+           and gjahr = p_gjahr
          order by primary key.
 
-  select belnr buzei up to 30000 rows
-         into table ls_data-item
+  select belnr buzei sgtxt up to 30000 rows
+         into table ls_data-items
          from bseg
-         where bukrs = '0210'
-           and gjahr = '2014'
+         where bukrs = p_bukrs
+           and gjahr = p_gjahr
          order by primary key.
 
-*  break-point.
+  "break-point.
 
   do 10000 times.
-    data(lv_belnr) = ls_data-head[ sy-index ]-belnr.
-    write:/ sy-index, lv_belnr.
 
+    "Sıradaki belge başlığını al
+    data(ls_head) = ls_data-heads[ sy-index ].
+
+    format color col_heading.
+    write:/ sy-index, ls_head-belnr.
+
+    format color col_normal.
+
+    "Belgenin ilk kalemini bul
     try.
-*        data(ls_mesh) = ls_data-head\my_items[ ls_data-head[ key cle_belnr belnr = lv_belnr ] ].
-
-        data(ls_mesh2) = ls_data-head\my_items[ value #( belnr = lv_belnr ) ].
-        write: ls_mesh2-belnr, ls_mesh2-buzei.
-
-        loop at ls_data-head\my_items[ value #( belnr = lv_belnr ) ] into data(ls_item).
-          write:/ ls_item-belnr, ls_item-buzei.
-        endloop.
-
-        if sy-subrc ne 0.
-          write:/ 'item not exists'.
-        endif.
-
+        data(ls_item1) = ls_data-heads\my_items[ ls_head ].
+        write:/ ls_item1-belnr, ls_item1-buzei, ls_item1-sgtxt.
       catch cx_sy_itab_line_not_found.
-        write: 'Not found'.
+        write:/ 'Not found'.
     endtry.
+
+    "Belgenin tüm kalemlerini al
+    loop at ls_data-heads\my_items[ ls_head ] into data(ls_item2).
+      write:/ ls_item2-belnr, ls_item2-buzei, ls_item2-sgtxt.
+    endloop.
+
+    if sy-subrc ne 0.
+      write:/ 'Item does not exist'.
+    endif.
+
   enddo.
 
 endform.          " main2
