@@ -1,2 +1,2 @@
 # dagnilak
-Kişisel kod arşivim
+Kişisel ABAP kod arşivim
