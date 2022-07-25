@@ -70,6 +70,18 @@
      <ENTRY>Program adı</ENTRY>
      <LENGTH>19</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_STRUC</KEY>
+     <ENTRY>Structure adı</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>STRUCT</KEY>
+     <ENTRY>Structure</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

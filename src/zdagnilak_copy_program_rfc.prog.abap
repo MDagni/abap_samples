@@ -25,6 +25,9 @@ selection-screen skip.
 parameters: method   radiobutton group prg,
             p_class  type seoclsname memory id zcopy_class,
             p_method type seocpdname memory id zcopy_method.
+selection-screen skip.
+parameters: struct  radiobutton group prg,
+            p_struc type tabname memory id zcopy_struc.
 selection-screen end of block b1.
 
 selection-screen begin of block b2 with frame.
@@ -109,6 +112,17 @@ form main.
               e_tab_code   = lt_code
               e_incname    = lv_incname ).
 
+        when struct.
+          lo_reader->read_stru(
+            exporting
+              i_name           = p_struc
+              i_langu          = sy-langu
+            importing
+              e_str_stru       = data(ls_str_stru)
+              e_tab_stru_field = data(lt_stru_field) ).
+
+          lv_incname = p_struc.
+
       endcase.
 
     catch cx_siw_resource_failure into data(lx_rf).
@@ -148,6 +162,19 @@ form main.
           i_clsname             = p_class
           i_methodname          = p_method
           i_tab_code            = lt_code
+        importing
+          e_str_exception       = ls_exception
+        exceptions
+          system_failure        = 1 message lv_msg
+          communication_failure = 2 message lv_msg.
+
+    when struct.
+      call function 'SIW_RFC_WRITE_STRU'
+        destination p_destin
+        exporting
+          i_str_stru            = ls_str_stru
+          i_tab_stru_field      = lt_stru_field
+          i_flg_activate        = abap_true
         importing
           e_str_exception       = ls_exception
         exceptions
@@ -198,6 +225,6 @@ form main.
 
   endif.
 
-  message |Program { lv_incname } kopyalandı| type 'S'.
+  message |{ lv_incname } kopyalandı| type 'S'.
 
 endform.          " main
