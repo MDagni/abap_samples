@@ -29,24 +29,25 @@ form main.
   types:
     "Belge tipi
     begin of ty_bkpf,
-      bukrs type bukrs,
-      belnr type belnr_d,
+      bukrs type bkpf-bukrs,
+      belnr type bkpf-belnr,
+      bktxt type bkpf-bktxt,
     end of ty_bkpf,
 
     "Kalem tipi
     begin of ty_bseg,
-      belnr type belnr_d,
-      buzei type buzei,
-      sgtxt type sgtxt,
+      belnr type bseg-belnr,
+      buzei type bseg-buzei,
+      sgtxt type bseg-sgtxt,
     end of ty_bseg,
 
     "Belge tablosu
     ty_t_bkpf type sorted table of ty_bkpf with unique key bukrs belnr
               with non-unique sorted key docno components belnr,
     "Kalem tablosu
-    ty_t_bseg type sorted table of ty_bseg with non-unique key belnr buzei,
+    ty_t_bseg type sorted table of ty_bseg with unique key belnr buzei,
 
-    "İlişki tanımı
+    "Veri ve ilişki tanımı
     begin of mesh ty_mesh,
       heads type ty_t_bkpf association my_items  to items on belnr = belnr,
       items type ty_t_bseg association my_header to heads on belnr = belnr using key docno,
@@ -56,14 +57,16 @@ form main.
   data: ls_data type ty_mesh.
 
   "Örnek veri
-  select bukrs belnr up to 10000 rows
+  select bukrs belnr bktxt
+         up to 10000 rows
          into table ls_data-heads
          from bkpf
          where bukrs = p_bukrs
            and gjahr = p_gjahr
          order by primary key.
 
-  select belnr buzei sgtxt up to 30000 rows
+  select belnr buzei sgtxt
+         up to 30000 rows
          into table ls_data-items
          from bseg
          where bukrs = p_bukrs
@@ -78,7 +81,7 @@ form main.
     data(ls_head) = ls_data-heads[ sy-index ].
 
     format color col_heading.
-    write:/ sy-index, ls_head-belnr.
+    write:/ sy-index, ls_head-belnr, ls_head-bktxt.
 
     format color col_normal.
 
@@ -87,16 +90,24 @@ form main.
         data(ls_item1) = ls_data-heads\my_items[ ls_head ].
         write:/ ls_item1-belnr, ls_item1-buzei, ls_item1-sgtxt.
       catch cx_sy_itab_line_not_found.
-        write:/ 'Not found'.
+        write:/ '001 Not found'.
+    endtry.
+
+    "Belgenin başka bir kalemini bul
+    try.
+        data(ls_item2) = ls_data-heads\my_items[ ls_head buzei = '003' ].
+        write:/ ls_item2-belnr, ls_item2-buzei, ls_item2-sgtxt.
+      catch cx_sy_itab_line_not_found.
+        write:/ '003 Not found'.
     endtry.
 
     "Belgenin tüm kalemlerini al
-    loop at ls_data-heads\my_items[ ls_head ] into data(ls_item2).
-      write:/ ls_item2-belnr, ls_item2-buzei, ls_item2-sgtxt.
+    loop at ls_data-heads\my_items[ ls_head ] into data(ls_item3).
+      write:/ ls_item3-belnr, ls_item3-buzei, ls_item3-sgtxt.
     endloop.
 
     if sy-subrc ne 0.
-      write:/ 'Item does not exist'.
+      write:/ 'No items exist'.
     endif.
 
   enddo.
