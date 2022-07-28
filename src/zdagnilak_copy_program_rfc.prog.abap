@@ -17,7 +17,7 @@ tables: sscrfields.
 selection-screen begin of block b1 with frame.
 parameters: program  radiobutton group prg,
             p_prog   type syrepid memory id zcopy_name,
-            p_notext as checkbox default 'X'.
+            p_witext as checkbox.
 selection-screen skip.
 parameters: function radiobutton group prg,
             p_func   type tfdir-funcname memory id zcopy_func.
@@ -92,7 +92,7 @@ form main.
             lt_textpool = value #( lt_textall[ 1 ]-texts optional ).
             lv_description = value #( lt_textpool[ id = 'R' ]-entry optional ).
 
-            if p_notext eq abap_true.
+            if p_witext is initial.
               refresh lt_textpool.
             endif.
           endif.
@@ -102,6 +102,13 @@ form main.
           lv_incname = ls_funcinfo-include.
           ls_trdir-subc = 'I'.
           lt_code = lo_reader->read_report( lv_incname ).
+
+          loop at lt_code assigning field-symbol(<ls_code>) from 2.
+            if <ls_code>(2) ne '*"'.
+              exit.
+            endif.
+            delete lt_code.
+          endloop.
 
         when method.
           lo_reader->read_method_source(
@@ -136,8 +143,7 @@ form main.
   endif.
 
   case abap_true.
-    when program
-      or function.
+    when program.
 
       call function 'SIW_RFC_WRITE_REPORT'
         destination p_destin
@@ -155,7 +161,26 @@ form main.
           system_failure        = 1 message lv_msg
           communication_failure = 2 message lv_msg.
 
+    when function.
+
+      call function 'SIW_RFC_WRITE_FUNC'
+        destination p_destin
+        exporting
+          i_name                = p_func
+          i_function_group      = ls_funcinfo-funcpool
+          i_tab_code            = lt_code
+          i_str_signature       = ls_funcinfo-str_signature
+          i_str_attributes      = ls_funcinfo-str_attributes
+          i_tab_top_code        = value siw_tab_code( )
+          i_flg_delete          = abap_false
+        importing
+          e_str_exception       = ls_exception
+        exceptions
+          system_failure        = 1 message lv_msg
+          communication_failure = 2 message lv_msg.
+
     when method.
+
       call function 'SIW_RFC_WRITE_CLASS_METHOD'
         destination p_destin
         exporting
@@ -169,6 +194,7 @@ form main.
           communication_failure = 2 message lv_msg.
 
     when struct.
+
       call function 'SIW_RFC_WRITE_STRU'
         destination p_destin
         exporting
@@ -195,10 +221,6 @@ form main.
   endif.
 
   if lt_textpool is not initial.
-
-    if gv_debug = 1.
-      break-point.
-    endif.
 
     call function 'SIW_RFC_WRITE_TEXTPOOL'
       destination p_destin

@@ -60,12 +60,6 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_NOTEXT</KEY>
-     <ENTRY>Metinler olmadan</ENTRY>
-     <LENGTH>24</LENGTH>
-    </item>
-    <item>
-     <ID>S</ID>
      <KEY>P_PROG</KEY>
      <ENTRY>Program adı</ENTRY>
      <LENGTH>19</LENGTH>
@@ -75,6 +69,12 @@
      <KEY>P_STRUC</KEY>
      <ENTRY>Structure adı</ENTRY>
      <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_WITEXT</KEY>
+     <ENTRY>Metinlerle birlikte</ENTRY>
+     <LENGTH>27</LENGTH>
     </item>
     <item>
      <ID>S</ID>
