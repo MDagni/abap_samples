@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>Parallel RFC processing örneği - Sipariş</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZDAGNI_SD_SALESORDERF01</SOBJ_NAME>
+    <SOBJ_NAME>LZDAGNI_SD_SALESORDERTOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZDAGNI_SD_SALESORDER</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZDAGNI_SD_ORDER_SIMULATE</FUNCNAME>
+     <SHORT_TEXT>Sipariş simülasyonu (paralel)</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>DISABLE_CREDIT_CHECK</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>XFELD</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>DISABLE_PARALLEL</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>XFELD</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>SERVER_GROUP</PARAMETER>
+       <DEFAULT>&apos;parallel_generators&apos;</DEFAULT>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>RZLLI_APCL</TYP>
+      </RSIMP>
+     </IMPORT>
+     <CHANGING>
+      <RSCHA>
+       <PARAMETER>ORDERS</PARAMETER>
+       <REFERENCE>X</REFERENCE>
+       <TYP>ZDAGNI_SD_ORDER_SIMULATE_TAB</TYP>
+      </RSCHA>
+     </CHANGING>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>DISABLE_CREDIT_CHECK</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Performans için kredi limiti kontrolünü devre dışı bırak</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>DISABLE_PARALLEL</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Paralel işleme yapılmasın</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>SERVER_GROUP</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>RFC Sunucu grubu (RZ12)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDERS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Sipariş simülasyonu için değerler (paralel işleme)</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+    <item>
+     <FUNCNAME>ZDAGNI_SD_ORDER_SIMULATE_RFC</FUNCNAME>
+     <REMOTE_CALL>R</REMOTE_CALL>
+     <SHORT_TEXT>Sipariş simülasyonu (tek)</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>ORDER_HEADER_IN</PARAMETER>
+       <TYP>ZDAGNI_SD_ORDER_SIMULATE-ORDER_HEADER_IN</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>DISABLE_CREDIT_CHECK</PARAMETER>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>XFELD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <TABLES>
+      <RSTBL>
+       <PARAMETER>ORDER_ITEMS_IN</PARAMETER>
+       <TYP>ESALES_BAPIITEMIN_TAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_PARTNERS</PARAMETER>
+       <TYP>ESALES_BAPIPARTNR_TAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_SCHEDULE_IN</PARAMETER>
+       <TYP>CMP_T_SCHDL</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>EXTENSIONIN</PARAMETER>
+       <TYP>BAPIPAREX_TABLE</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>PARTNERADDRESSES</PARAMETER>
+       <TYP>BAPIADDR1_TAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_ITEMS_OUT</PARAMETER>
+       <TYP>ESALES_BAPIITEMEX_TAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_SCHEDULE_EX</PARAMETER>
+       <TYP>BAPISDHEDUTAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_CONDITION_EX</PARAMETER>
+       <TYP>CMP_T_COND</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>ORDER_INCOMPLETE</PARAMETER>
+       <TYP>ZDAGNI_BAPIINCOMP_TAB</TYP>
+      </RSTBL>
+      <RSTBL>
+       <PARAMETER>MESSAGETABLE</PARAMETER>
+       <TYP>BAPIRET2_TAB</TYP>
+      </RSTBL>
+     </TABLES>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>ORDER_HEADER_IN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İletişim alanları: SD belge başlığı</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>DISABLE_CREDIT_CHECK</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Performans için kredi limiti kontrolünü devre dışı bırak</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_ITEMS_IN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İletişim alanları: SD belge kalemleri yarat: WWW</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_PARTNERS</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İletişim alanları: SD belgesi muhatabı: WWW</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_SCHEDULE_IN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>BAPISCHDL Table Type</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>EXTENSIONIN</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Table for Enhancement</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>PARTNERADDRESSES</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Adresler için BAPI referans yapısı (org./şirket)</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_ITEMS_OUT</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İletişim alanları: SD belge kalemleri çıktısı: WWW</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_SCHEDULE_EX</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İngilizce alan adlarıyla VBLB BAPI tablo tipi</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_CONDITION_EX</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Table Type for BAPI Cond</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>ORDER_INCOMPLETE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>İletişim alanları: Eksiklik</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>MESSAGETABLE</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>Hata iletileri</STEXT>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
