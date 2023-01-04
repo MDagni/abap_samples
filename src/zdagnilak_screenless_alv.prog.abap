@@ -2,11 +2,12 @@
 * cl_gui_container=>screen0 kullanımına örnek
 * Kaynak:
 * http://quelquepart.biz/article25/afficher-un-alv-objet-sans-creer-d-ecran-screen-painter
+*
 * ALV Grid yerine SALV Table kullanacak şekilde güncellendi.
 * Bu şekilde gösterim yapılınca yüksek çözünürlüklü ekranlarda ekranın sağ tarafının boş kalması da
 * engellenmiş oluyor.
 
-program zdagnilak_screenless_alv2.
+program zdagnilak_screenless_alv.
 
 tables: vbak.
 
