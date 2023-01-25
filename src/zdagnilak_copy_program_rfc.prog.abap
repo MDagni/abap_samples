@@ -31,20 +31,14 @@ parameters: struct  radiobutton group prg,
 selection-screen end of block b1.
 
 selection-screen begin of block b2 with frame.
-parameters: p_destin type rfcdest obligatory memory id vers_dest.
+parameters: p_destin type rfcdest obligatory memory id vers_dest,
+            p_debug  as checkbox.
 selection-screen end of block b2.
-
-data: gv_debug type i.
 
 *&---------------------------------------------------------------------*
 *& AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 at selection-screen.
-  if sscrfields-ucomm eq 'DEBUG'.
-    gv_debug = 1 - gv_debug.
-    message |Debug mode { gv_debug }| type 'S'.
-    clear sscrfields-ucomm.
-  endif.
 
   "RFC hedefinin yalnızca bir kere şifre sorması için çalıştırma burada yapıldı.
   if sscrfields-ucomm eq 'ONLI'.
@@ -138,7 +132,10 @@ form main.
   endtry.
 
 
-  if gv_debug = 1.
+*  call function 'RFC_PING'
+*    destination p_destin.
+
+  if p_debug = abap_true.
     break-point.
   endif.
 

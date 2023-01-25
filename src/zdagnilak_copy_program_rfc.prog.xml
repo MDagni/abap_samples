@@ -41,6 +41,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>P_DEBUG</KEY>
+     <ENTRY>Debug</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_DESTIN</KEY>
      <ENTRY>.</ENTRY>
      <LENGTH>18</LENGTH>
