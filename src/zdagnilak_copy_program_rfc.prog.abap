@@ -131,9 +131,17 @@ form main.
       return.
   endtry.
 
+  call function 'RFC_PING_AND_WAIT'
+    destination p_destin
+    exceptions
+      system_failure        = 1 message lv_msg
+      communication_failure = 2 message lv_msg.
 
-*  call function 'RFC_PING'
-*    destination p_destin.
+  if sy-subrc ne 0 or
+     lv_msg is not initial.
+    message lv_msg type 'I' display like 'E'.
+    return.
+  endif.
 
   if p_debug = abap_true.
     break-point.
