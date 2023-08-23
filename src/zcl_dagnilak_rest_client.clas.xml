@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_DAGNILAK_REST_SERVICES</CLSNAME>
+    <CLSNAME>ZCL_DAGNILAK_REST_CLIENT</CLSNAME>
     <LANGU>T</LANGU>
     <DESCRIPT>Rest servisleri çağrımı</DESCRIPT>
     <STATE>1</STATE>
