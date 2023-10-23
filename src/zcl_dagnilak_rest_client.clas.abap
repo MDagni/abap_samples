@@ -41,7 +41,7 @@ class zcl_dagnilak_rest_client definition
         i_url               type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -58,7 +58,7 @@ class zcl_dagnilak_rest_client definition
         it_form_fields      type tihttpnvp optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -68,7 +68,7 @@ class zcl_dagnilak_rest_client definition
         is_json_data        type data      optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -79,7 +79,7 @@ class zcl_dagnilak_rest_client definition
         i_payload           type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -89,7 +89,7 @@ class zcl_dagnilak_rest_client definition
         it_form_fields      type tihttpnvp optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -99,7 +99,7 @@ class zcl_dagnilak_rest_client definition
         is_json_data        type data      optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -110,7 +110,7 @@ class zcl_dagnilak_rest_client definition
         i_payload           type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 
@@ -144,7 +144,7 @@ class zcl_dagnilak_rest_client definition
         io_payload          type ref to if_rest_entity optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_success           type abap_bool
+        e_called            type abap_bool
         e_response          type string
         es_response_data    type data.
 endclass.
@@ -153,22 +153,25 @@ endclass.
 class zcl_dagnilak_rest_client implementation.
 
   method call_rest_service.
-    " Sonuç Hatalı olarak başla
-    clear: e_success, e_response, es_response_data.
+
+    "Sonuç Hatalı olarak başla
+    clear: e_called,
+           e_response,
+           es_response_data.
 
     try.
-        " Servis elemanlarını yarat
+        "Servis elemanlarını yarat
         cl_http_utility=>set_request_uri( request = mo_http_client->request
                                           uri     = i_url ).
 
-        " Authorization bilgisini ekle
-        if  i_use_authorization  = abap_true
-        and mv_auth_value       is not initial.
+        "Authorization bilgisini ekle
+        if i_use_authorization  = abap_true and
+           mv_auth_value       is not initial.
           io_rest_client->if_rest_client~set_request_header( iv_name  = mv_auth_name
                                                              iv_value = mv_auth_value ).
         endif.
 
-        " Çağrı yöntemine göre çağrıyı yap. Diğer yöntemler gerektikçe eklenebilir.
+        "Çağrı yöntemine göre çağrıyı yap. Diğer yöntemler gerektikçe eklenebilir.
         case i_method.
           when if_rest_message=>gc_method_get.
             io_rest_client->if_rest_client~get( ).
@@ -180,24 +183,24 @@ class zcl_dagnilak_rest_client implementation.
             io_rest_client->if_rest_client~put( io_payload ).
 
           when if_rest_message=>gc_method_patch.
-            " Patch metodu rest client'ta mevcut değil, enhancement ile eklenebilir
-            " io_rest->patch( io_payload ).
+            "Patch metodu rest client'ta mevcut değil, enhancement ile eklenebilir
+            "io_rest->patch( io_payload ).
             message a319(01) with 'PATCH METODU DESTEKLENMİYOR!'.
 
         endcase.
 
-        " HTTP hatası dönmüşse exception çıkar. 403 gibi bir hata gelirse rest client'tan exception
-        " dönmüyor.
+        "HTTP hatası dönmüşse exception çıkar. 403 gibi bir hata gelirse rest client'tan exception
+        "dönmüyor.
         if io_rest_client->if_rest_client~get_status( ) <> 200.
           raise exception type cx_rest_client_exception
             exporting
               textid = cx_rest_client_exception=>http_client_comm_failure.
         endif.
 
-        " Çağrı başarılı ise servisten dönen bilgiyi al
-        e_success = abap_true.
+        "Çağrı başarılı ise servisten dönen bilgiyi al
+        e_called = abap_true.
 
-        " Dönen cevabı Abap verisine dönüştür
+        "Dönen cevabı Abap verisine dönüştür
         if es_response_data is supplied.
           parse_response( exporting io_response      = io_rest_client->if_rest_client~get_response_entity( )
                           importing e_response       = e_response
@@ -205,34 +208,34 @@ class zcl_dagnilak_rest_client implementation.
         endif.
 
       catch cx_rest_client_exception into data(lx_rest).
-        " Çağrı sırasında hata çıkarsa
-        e_success = abap_false.
+        "Çağrı sırasında hata çıkarsa
+        e_called = abap_false.
 
-        " HTTP hatası dönmüşse onu al
+        "HTTP hatası dönmüşse onu al
         data(lv_http_status) = io_rest_client->if_rest_client~get_status( ).
         mo_http_client->get_last_error( importing message = e_response ).
 
         if e_response is not initial.
           e_response = |HTTP { lv_http_status } - { e_response }|.
         else.
-          " Sunucudan cevap olarak hata mesajı döndüyse onu al
+          "Sunucudan cevap olarak hata mesajı döndüyse onu al
           parse_response( exporting io_response      = io_rest_client->if_rest_client~get_response_entity( )
                           importing e_response       = e_response
                                     es_response_data = es_response_data ).
         endif.
 
-        " Sunucudan bir şey dönmediyse exception metnini al
+        "Sunucudan bir şey dönmediyse exception metnini al
         if e_response is initial.
           e_response = lx_rest->get_text( ).
         endif.
 
       catch cx_root into data(lx_root) ##CATCH_ALL.
-        " Başka bir hata çıkarsa
-        e_success = abap_false.
+        "Başka bir hata çıkarsa
+        e_called = abap_false.
         e_response = lx_root->get_text( ).
     endtry.
 
-    " debug için
+    "debug için
     mv_last_request  = cl_bcs_convert=>xstring_to_string( iv_xstr = mo_http_client->request->to_xstring( )
                                                           iv_cp   = '1100' ).
 
@@ -242,23 +245,29 @@ class zcl_dagnilak_rest_client implementation.
     if io_rest_client is bound.
       io_rest_client->if_rest_client~close( ).
     endif.
+
   endmethod.
 
 
   method clear_crlf.
+
     replace all occurrences of cl_abap_char_utilities=>cr_lf   in value with ` `.
     replace all occurrences of cl_abap_char_utilities=>newline in value with ` `.
+
   endmethod.
 
 
   method convert_to_json.
+
     rv_json = /ui2/cl_json=>serialize( data        = is_json_data
                                        compress    = abap_false
                                        pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+
   endmethod.
 
 
   method create_by_destination.
+
     result = new #( ).
 
     cl_http_client=>create_by_destination( exporting  destination              = destination
@@ -277,10 +286,12 @@ class zcl_dagnilak_rest_client implementation.
 
     result->mo_http_client->propertytype_logon_popup   = if_http_client=>co_disabled.
     result->mo_http_client->propertytype_accept_cookie = if_http_client=>co_enabled.
+
   endmethod.
 
 
   method create_by_url.
+
     result = new #( ).
 
     cl_http_client=>create_by_url( exporting  url                = url
@@ -297,23 +308,27 @@ class zcl_dagnilak_rest_client implementation.
 
     result->mo_http_client->propertytype_logon_popup   = if_http_client=>co_disabled.
     result->mo_http_client->propertytype_accept_cookie = if_http_client=>co_enabled.
+
   endmethod.
 
 
   method get.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     call_rest_service( exporting io_rest_client      = lo_rest_client
                                  i_url               = i_url
                                  i_method            = if_rest_message=>gc_method_get
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method parse_json.
+
     /ui2/cl_json=>deserialize( exporting json        = i_json
                                          pretty_name = i_pretty_name
                                changing  data        = es_data ).
@@ -321,6 +336,7 @@ class zcl_dagnilak_rest_client implementation.
 
 
   method parse_response.
+
     clear es_response_data.
 
     e_response = io_response->get_string_data( ).
@@ -332,10 +348,12 @@ class zcl_dagnilak_rest_client implementation.
         parse_json( exporting i_json  = e_response
                     importing es_data = es_response_data ).
     endcase.
+
   endmethod.
 
 
   method post_form.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
@@ -349,13 +367,15 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method post_json_data.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
@@ -369,18 +389,20 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method post_string.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
 
-    lo_payload->set_content_type( i_content_type ).   " if_rest_media_type=>gc_appl_json
+    lo_payload->set_content_type( i_content_type ).   "if_rest_media_type=>gc_appl_json
     lo_payload->set_string_data( i_payload ).
 
     call_rest_service( exporting io_rest_client      = lo_rest_client
@@ -388,22 +410,26 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method prepare_url.
+
     e_url = i_url.
 
     loop at it_params assigning field-symbol(<ls_param>).
-      replace <ls_param>-name in e_url with <ls_param>-value.
+      replace all occurrences of <ls_param>-name in e_url with <ls_param>-value.
     endloop.
+
   endmethod.
 
 
   method put_form.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
@@ -417,13 +443,15 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method put_json_data.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
@@ -437,18 +465,20 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method put_string.
+
     data(lo_rest_client) = new cl_rest_http_client( mo_http_client ).
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
 
-    lo_payload->set_content_type( i_content_type ).   " if_rest_media_type=>gc_appl_json
+    lo_payload->set_content_type( i_content_type ).   "if_rest_media_type=>gc_appl_json
     lo_payload->set_string_data( i_payload ).
 
     call_rest_service( exporting io_rest_client      = lo_rest_client
@@ -456,20 +486,25 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_success           = e_success
+                       importing e_called            = e_called
                                  e_response          = e_response
                                  es_response_data    = es_response_data ).
+
   endmethod.
 
 
   method set_authorization.
+
     mv_auth_name = name.
     mv_auth_value = value.
+
   endmethod.
 
 
   method set_timeout.
+
     mv_timeout = i_timeout.
+
   endmethod.
 
 endclass.
