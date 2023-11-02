@@ -29,7 +29,7 @@ class zcl_dagnilak_ftp definition
         username type clike
         password type clike
         !path    type clike   optional
-        rfcdest  type rfcdest optional.
+        rfcdest  type rfcdest default 'SAPFTPA'.
 
     methods delete_file
       importing
