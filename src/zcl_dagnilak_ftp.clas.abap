@@ -41,9 +41,9 @@ class zcl_dagnilak_ftp definition
 
     methods ftp_command
       importing
-        !command        type char255
-      returning
-        value(ftplines) type tttext255
+        !command type char255
+      exporting
+        ftplines type tttext255
       raising
         cx_bapi_error.
 
@@ -132,7 +132,8 @@ class zcl_dagnilak_ftp implementation.
   method change_dir.
 
     try.
-        data(lt_ftplines) = ftp_command( |cd { dir }| ).
+        ftp_command( exporting command  = |cd { dir }|
+                     importing ftplines = data(lt_ftplines) ).
 
       catch cx_bapi_error.
 
@@ -230,7 +231,8 @@ class zcl_dagnilak_ftp implementation.
     progress( |{ text-006 } { filename }| ).
 
     try.
-        data(lt_ftplines) = ftp_command( |delete { filename }| ).
+        ftp_command( exporting command  = |delete { filename }|
+                     importing ftplines = data(lt_ftplines) ).
 
       catch cx_bapi_error.
 
@@ -355,7 +357,8 @@ class zcl_dagnilak_ftp implementation.
 
     "Get file list
     try.
-        data(lt_ftplines) = ftp_command( 'nlist' ).
+        ftp_command( exporting command  = `nlist`
+                     importing ftplines = data(lt_ftplines) ).
 
       catch cx_bapi_error.
 
