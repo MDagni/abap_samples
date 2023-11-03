@@ -147,7 +147,6 @@ class zcl_dagnilak_ftp implementation.
         endif.
 
         "Otherwise
-        message e002 into mv_msg.
         raise_error( ).
     endtry.
 
@@ -202,7 +201,6 @@ class zcl_dagnilak_ftp implementation.
         others          = 2.
 
     if sy-subrc <> 0.
-      message e002 into mv_msg.
       raise_error( ).
     endif.
 
@@ -227,7 +225,7 @@ class zcl_dagnilak_ftp implementation.
 
   method delete_file.
 
-    "Get file
+    "Delete file
     progress( |{ text-006 } { filename }| ).
 
     try.
@@ -246,7 +244,6 @@ class zcl_dagnilak_ftp implementation.
         endif.
 
         "Otherwise
-        message e002 into mv_msg.
         raise_error( ).
     endtry.
 
@@ -286,6 +283,8 @@ class zcl_dagnilak_ftp implementation.
 
     refresh ftplines.
 
+    clear sy-msgid.
+
     call function 'FTP_COMMAND'
       exporting
         handle        = mv_ftphandle
@@ -299,6 +298,9 @@ class zcl_dagnilak_ftp implementation.
         others        = 4.
 
     if sy-subrc <> 0.
+      if sy-msgid is initial.
+        message e002 into mv_msg.
+      endif.
       raise_error( ).
     endif.
 
@@ -316,6 +318,8 @@ class zcl_dagnilak_ftp implementation.
     progress( msg     = |{ text-004 } { filename }|
               percent = percent ).
 
+    clear sy-msgid.
+
     call function 'FTP_SERVER_TO_R3'
       exporting
         handle         = mv_ftphandle
@@ -332,7 +336,10 @@ class zcl_dagnilak_ftp implementation.
         others         = 4.
 
     if sy-subrc <> 0.
-      message e003 into mv_msg.
+      if sy-msgid is initial or
+         ( sy-msgid = '04' and sy-msgno = '209' ).
+        message e003 into mv_msg.
+      endif.
       raise_error( ).
     endif.
 
@@ -377,7 +384,6 @@ class zcl_dagnilak_ftp implementation.
         endif.
 
         "Otherwise
-        message e002 into mv_msg.
         raise_error( ).
     endtry.
 
@@ -433,6 +439,8 @@ class zcl_dagnilak_ftp implementation.
     progress( msg     = |{ text-004 } { filename }|
               percent = percent ).
 
+    clear sy-msgid.
+
     call function 'FTP_SERVER_TO_R3'
       exporting
         handle         = mv_ftphandle
@@ -447,7 +455,9 @@ class zcl_dagnilak_ftp implementation.
         others         = 4.
 
     if sy-subrc <> 0.
-      message e003 into mv_msg.
+      if sy-msgid is initial.
+        message e003 into mv_msg.
+      endif.
       raise_error( ).
     endif.
 
@@ -529,6 +539,8 @@ class zcl_dagnilak_ftp implementation.
     progress( msg     = |{ text-003 } { filename }|
               percent = percent ).
 
+    clear sy-msgid.
+
     call function 'FTP_R3_TO_SERVER'
       exporting
         handle         = mv_ftphandle
@@ -544,7 +556,9 @@ class zcl_dagnilak_ftp implementation.
         others         = 4.
 
     if sy-subrc <> 0.
-      message e004 into mv_msg.
+      if sy-msgid is initial.
+        message e004 into mv_msg.
+      endif.
       raise_error( ).
     endif.
 
@@ -585,7 +599,7 @@ class zcl_dagnilak_ftp implementation.
         others         = 4.
 
     if sy-subrc <> 0.
-      message e004 into mv_msg.
+      "message e004 into mv_msg.
       raise_error( ).
     endif.
 

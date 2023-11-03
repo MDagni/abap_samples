@@ -24,19 +24,19 @@
      <SPRSL>T</SPRSL>
      <ARBGB>ZDAGNILAK_FTP</ARBGB>
      <MSGNR>003</MSGNR>
-     <TEXT>Dosya indirmede bağlantı hatası</TEXT>
+     <TEXT>Dosya indirilirken FTP bağlantı hatası oluştu.</TEXT>
     </T100>
     <T100>
      <SPRSL>T</SPRSL>
      <ARBGB>ZDAGNILAK_FTP</ARBGB>
      <MSGNR>004</MSGNR>
-     <TEXT>Dosya göndermede bağlantı hatası</TEXT>
+     <TEXT>Dosya gönderilirken FTP bağlantı hatası oluştu.</TEXT>
     </T100>
     <T100>
      <SPRSL>T</SPRSL>
      <ARBGB>ZDAGNILAK_FTP</ARBGB>
      <MSGNR>005</MSGNR>
-     <TEXT>Dosya silmede hata: &amp;1&amp;2&amp;3&amp;4</TEXT>
+     <TEXT>Dosya silinirken hata oluştu: &amp;1&amp;2&amp;3&amp;4</TEXT>
     </T100>
    </T100>
   </asx:values>
