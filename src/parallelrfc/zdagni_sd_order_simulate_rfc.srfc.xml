@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SRFC" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <SRFC>
+    <HEADER>
+     <ID>ZDAGNI_SD_ORDER_SIMULATE_RFC</ID>
+     <VERSION>A</VERSION>
+     <FUNCNAME>ZDAGNI_SD_ORDER_SIMULATE_RFC</FUNCNAME>
+    </HEADER>
+    <TEXT>
+     <ID>ZDAGNI_SD_ORDER_SIMULATE_RFC</ID>
+     <VERSION>A</VERSION>
+     <LANG>T</LANG>
+     <SHORTTEXT>Default RFC Service for Function-Module: ZDAGNI_SD_ORDER_SIMULATE_RFC</SHORTTEXT>
+    </TEXT>
+   </SRFC>
+  </asx:values>
+ </asx:abap>
+</abapGit>
