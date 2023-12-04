@@ -12,27 +12,27 @@
 
 report zdagnilak_copy_program_rfc.
 
-tables: sscrfields.
+tables sscrfields.
 
 selection-screen begin of block b1 with frame.
-parameters: program  radiobutton group prg,
-            p_prog   type syrepid memory id zcopy_name,
-            p_witext as checkbox.
-selection-screen skip.
-parameters: function radiobutton group prg,
-            p_func   type tfdir-funcname memory id zcopy_func.
-selection-screen skip.
-parameters: method   radiobutton group prg,
-            p_class  type seoclsname memory id zcopy_class,
-            p_method type seocpdname memory id zcopy_method.
-selection-screen skip.
-parameters: struct  radiobutton group prg,
-            p_struc type tabname memory id zcopy_struc.
+  parameters: program  radiobutton group prg,
+              p_prog   type syrepid memory id zcopy_name,
+              p_witext as checkbox.
+  selection-screen skip.
+  parameters: function radiobutton group prg,
+              p_func   type tfdir-funcname memory id zcopy_func.
+  selection-screen skip.
+  parameters: method   radiobutton group prg,
+              p_class  type seoclsname memory id zcopy_class,
+              p_method type seocpdname memory id zcopy_method.
+  selection-screen skip.
+  parameters: struct  radiobutton group prg,
+              p_struc type tabname memory id zcopy_struc.
 selection-screen end of block b1.
 
 selection-screen begin of block b2 with frame.
-parameters: p_destin type rfcdest obligatory memory id vers_dest,
-            p_debug  as checkbox.
+  parameters: p_destin type rfcdest obligatory memory id vers_dest,
+              p_debug  as checkbox.
 selection-screen end of block b2.
 
 *&---------------------------------------------------------------------*
@@ -41,7 +41,7 @@ selection-screen end of block b2.
 at selection-screen.
 
   "RFC hedefinin yalnızca bir kere şifre sorması için çalıştırma burada yapıldı.
-  if sscrfields-ucomm eq 'ONLI'.
+  if sscrfields-ucomm = 'ONLI'.
     perform main.
     clear sscrfields-ucomm.
   endif.
@@ -98,29 +98,23 @@ form main.
           lt_code = lo_reader->read_report( lv_incname ).
 
           loop at lt_code assigning field-symbol(<ls_code>) from 2.
-            if <ls_code>(2) ne '*"'.
+            if <ls_code>(2) <> '*"'.
               exit.
             endif.
             delete lt_code.
           endloop.
 
         when method.
-          lo_reader->read_method_source(
-            exporting
-              i_clsname    = p_class
-              i_methodname = p_method
-            importing
-              e_tab_code   = lt_code
-              e_incname    = lv_incname ).
+          lo_reader->read_method_source( exporting i_clsname    = p_class
+                                                   i_methodname = p_method
+                                         importing e_tab_code   = lt_code
+                                                   e_incname    = lv_incname ).
 
         when struct.
-          lo_reader->read_stru(
-            exporting
-              i_name           = p_struc
-              i_langu          = sy-langu
-            importing
-              e_str_stru       = data(ls_str_stru)
-              e_tab_stru_field = data(lt_stru_field) ).
+          lo_reader->read_stru( exporting i_name           = p_struc
+                                          i_langu          = sy-langu
+                                importing e_str_stru       = data(ls_str_stru)
+                                          e_tab_stru_field = data(lt_stru_field) ).
 
           lv_incname = p_struc.
 
@@ -137,8 +131,8 @@ form main.
       system_failure        = 1 message lv_msg
       communication_failure = 2 message lv_msg.
 
-  if sy-subrc ne 0 or
-     lv_msg is not initial.
+  if sy-subrc <> 0 or
+     lv_msg   is not initial.
     message lv_msg type 'I' display like 'E'.
     return.
   endif.
@@ -214,8 +208,8 @@ form main.
 
   endcase.
 
-  if sy-subrc ne 0 or
-     lv_msg is not initial.
+  if sy-subrc <> 0 or
+     lv_msg   is not initial.
     message lv_msg type 'I' display like 'E'.
     return.
   endif.
@@ -226,6 +220,10 @@ form main.
   endif.
 
   if lt_textpool is not initial.
+
+    if p_debug = abap_true.
+      break-point.
+    endif.
 
     call function 'SIW_RFC_WRITE_TEXTPOOL'
       destination p_destin
@@ -239,8 +237,8 @@ form main.
         system_failure        = 1 message lv_msg
         communication_failure = 2 message lv_msg.
 
-    if sy-subrc ne 0 or
-       lv_msg is not initial.
+    if sy-subrc <> 0 or
+       lv_msg   is not initial.
       message lv_msg type 'I' display like 'E'.
       return.
     endif.
@@ -254,4 +252,4 @@ form main.
 
   message |{ lv_incname } kopyalandı| type 'S'.
 
-endform.          " main
+endform.
