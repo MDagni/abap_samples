@@ -1,6 +1,5 @@
 class zcl_dagnilak_rest_client definition
   public
-  final
   create private.
 
   public section.
@@ -41,8 +40,8 @@ class zcl_dagnilak_rest_client definition
         i_url               type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     class-methods parse_json
@@ -58,8 +57,8 @@ class zcl_dagnilak_rest_client definition
         it_form_fields      type tihttpnvp optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods post_json_data
@@ -68,8 +67,8 @@ class zcl_dagnilak_rest_client definition
         is_json_data        type data      optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods post_string
@@ -79,8 +78,8 @@ class zcl_dagnilak_rest_client definition
         i_payload           type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods put_form
@@ -89,8 +88,8 @@ class zcl_dagnilak_rest_client definition
         it_form_fields      type tihttpnvp optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods put_json_data
@@ -99,8 +98,8 @@ class zcl_dagnilak_rest_client definition
         is_json_data        type data      optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods put_string
@@ -110,8 +109,8 @@ class zcl_dagnilak_rest_client definition
         i_payload           type string
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 
     methods set_authorization
@@ -133,7 +132,7 @@ class zcl_dagnilak_rest_client definition
       importing
         io_response      type ref to if_rest_entity
       exporting
-        e_response       type string
+        e_response_text  type string
         es_response_data type data.
 
     methods call_rest_service
@@ -144,8 +143,8 @@ class zcl_dagnilak_rest_client definition
         io_payload          type ref to if_rest_entity optional
         i_use_authorization type abap_bool default abap_true
       exporting
-        e_called            type abap_bool
-        e_response          type string
+        e_success           type abap_bool
+        e_response_text     type string
         es_response_data    type data.
 endclass.
 
@@ -155,8 +154,8 @@ class zcl_dagnilak_rest_client implementation.
   method call_rest_service.
 
     "Sonuç Hatalı olarak başla
-    clear: e_called,
-           e_response,
+    clear: e_success,
+           e_response_text,
            es_response_data.
 
     try.
@@ -198,41 +197,41 @@ class zcl_dagnilak_rest_client implementation.
         endif.
 
         "Çağrı başarılı ise servisten dönen bilgiyi al
-        e_called = abap_true.
+        e_success = abap_true.
 
         "Dönen cevabı Abap verisine dönüştür
         if es_response_data is supplied.
           parse_response( exporting io_response      = io_rest_client->if_rest_client~get_response_entity( )
-                          importing e_response       = e_response
+                          importing e_response_text  = e_response_text
                                     es_response_data = es_response_data ).
         endif.
 
       catch cx_rest_client_exception into data(lx_rest).
         "Çağrı sırasında hata çıkarsa
-        e_called = abap_false.
+        e_success = abap_false.
 
         "HTTP hatası dönmüşse onu al
         data(lv_http_status) = io_rest_client->if_rest_client~get_status( ).
-        mo_http_client->get_last_error( importing message = e_response ).
+        mo_http_client->get_last_error( importing message = e_response_text ).
 
-        if e_response is not initial.
-          e_response = |HTTP { lv_http_status } - { e_response }|.
+        if e_response_text is not initial.
+          e_response_text = |HTTP { lv_http_status } - { e_response_text }|.
         else.
           "Sunucudan cevap olarak hata mesajı döndüyse onu al
           parse_response( exporting io_response      = io_rest_client->if_rest_client~get_response_entity( )
-                          importing e_response       = e_response
+                          importing e_response_text  = e_response_text
                                     es_response_data = es_response_data ).
         endif.
 
         "Sunucudan bir şey dönmediyse exception metnini al
-        if e_response is initial.
-          e_response = lx_rest->get_text( ).
+        if e_response_text is initial.
+          e_response_text = lx_rest->get_text( ).
         endif.
 
       catch cx_root into data(lx_root) ##CATCH_ALL.
         "Başka bir hata çıkarsa
-        e_called = abap_false.
-        e_response = lx_root->get_text( ).
+        e_success = abap_false.
+        e_response_text = lx_root->get_text( ).
     endtry.
 
     "debug için
@@ -320,8 +319,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_url               = i_url
                                  i_method            = if_rest_message=>gc_method_get
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -339,13 +338,13 @@ class zcl_dagnilak_rest_client implementation.
 
     clear es_response_data.
 
-    e_response = io_response->get_string_data( ).
+    e_response_text = io_response->get_string_data( ).
 
     io_response->get_content_type( importing ev_media_type = data(lv_media_type) ).
 
     case lv_media_type.
       when if_rest_media_type=>gc_appl_json.
-        parse_json( exporting i_json  = e_response
+        parse_json( exporting i_json  = e_response_text
                     importing es_data = es_response_data ).
     endcase.
 
@@ -367,8 +366,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -389,8 +388,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -410,8 +409,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_post
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -443,8 +442,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -465,8 +464,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
@@ -486,8 +485,8 @@ class zcl_dagnilak_rest_client implementation.
                                  i_method            = if_rest_message=>gc_method_put
                                  io_payload          = lo_payload
                                  i_use_authorization = i_use_authorization
-                       importing e_called            = e_called
-                                 e_response          = e_response
+                       importing e_success           = e_success
+                                 e_response_text     = e_response_text
                                  es_response_data    = es_response_data ).
 
   endmethod.
