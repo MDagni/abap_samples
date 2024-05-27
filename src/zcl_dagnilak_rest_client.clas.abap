@@ -204,6 +204,8 @@ class zcl_dagnilak_rest_client implementation.
           parse_response( exporting io_response      = io_rest_client->if_rest_client~get_response_entity( )
                           importing e_response_text  = e_response_text
                                     es_response_data = es_response_data ).
+        else.
+          e_response_text = io_rest_client->if_rest_client~get_response_entity( )->get_string_data( ).
         endif.
 
       catch cx_rest_client_exception into data(lx_rest).
