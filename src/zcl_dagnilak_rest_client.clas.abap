@@ -13,6 +13,7 @@ class zcl_dagnilak_rest_client definition
     class-methods convert_to_json
       importing
         is_json_data   type data
+        i_pretty_name  type /ui2/cl_json=>pretty_name_mode default /ui2/cl_json=>pretty_mode-camel_case
       returning
         value(rv_json) type string.
 
@@ -64,8 +65,9 @@ class zcl_dagnilak_rest_client definition
     methods post_json_data
       importing
         i_url               type string
-        is_json_data        type data      optional
-        i_use_authorization type abap_bool default abap_true
+        is_json_data        type data                           optional
+        i_use_authorization type abap_bool                      default abap_true
+        i_pretty_name       type /ui2/cl_json=>pretty_name_mode default /ui2/cl_json=>pretty_mode-camel_case
       exporting
         e_success           type abap_bool
         e_response_text     type string
@@ -95,8 +97,9 @@ class zcl_dagnilak_rest_client definition
     methods put_json_data
       importing
         i_url               type string
-        is_json_data        type data      optional
-        i_use_authorization type abap_bool default abap_true
+        is_json_data        type data                           optional
+        i_use_authorization type abap_bool                      default abap_true
+        i_pretty_name       type /ui2/cl_json=>pretty_name_mode default /ui2/cl_json=>pretty_mode-camel_case
       exporting
         e_success           type abap_bool
         e_response_text     type string
@@ -262,7 +265,7 @@ class zcl_dagnilak_rest_client implementation.
 
     rv_json = /ui2/cl_json=>serialize( data        = is_json_data
                                        compress    = abap_false
-                                       pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+                                       pretty_name = i_pretty_name ).
 
   endmethod.
 
@@ -381,7 +384,9 @@ class zcl_dagnilak_rest_client implementation.
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
 
-    data(lv_json) = convert_to_json( is_json_data ).
+    data(lv_json) = convert_to_json( is_json_data  = is_json_data
+                                     i_pretty_name = i_pretty_name ).
+
     lo_payload->set_content_type( if_rest_media_type=>gc_appl_json ).
     lo_payload->set_string_data( lv_json ).
 
@@ -457,7 +462,8 @@ class zcl_dagnilak_rest_client implementation.
 
     data(lo_payload) = lo_rest_client->if_rest_client~create_request_entity( ).
 
-    data(lv_json) = convert_to_json( is_json_data ).
+    data(lv_json) = convert_to_json( is_json_data  = is_json_data
+                                     i_pretty_name = i_pretty_name ).
     lo_payload->set_content_type( if_rest_media_type=>gc_appl_json ).
     lo_payload->set_string_data( lv_json ).
 
