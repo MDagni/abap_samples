@@ -77,69 +77,6 @@
     </STA>
     <FUN>
      <RSMPE_FUNT>
-      <CODE>%EX</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Exit</FUN_TEXT>
-      <PATH>X</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%PC</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>File...</FUN_TEXT>
-      <PATH>F</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%PRI</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_PRINT</TEXT_NAME>
-      <ICON_ID>@0X@</ICON_ID>
-      <FUN_TEXT>Print</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%SC</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_SEARCH</TEXT_NAME>
-      <ICON_ID>@13@</ICON_ID>
-      <FUN_TEXT>Find...</FUN_TEXT>
-      <PATH>F</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%SC</CODE>
-      <TEXTNO>002</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_SEARCH</TEXT_NAME>
-      <ICON_ID>@13@</ICON_ID>
-      <FUN_TEXT>Find</FUN_TEXT>
-      <PATH>S</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%SC+</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_SEARCH_NEXT</TEXT_NAME>
-      <ICON_ID>@4E@</ICON_ID>
-      <FUN_TEXT>Find next</FUN_TEXT>
-      <PATH>E</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%SL</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Office</FUN_TEXT>
-      <PATH>E</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>%ST</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Report tree</FUN_TEXT>
-      <PATH>R</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
       <CODE>BACK</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -148,144 +85,10 @@
       <FUN_TEXT>Çıkış</FUN_TEXT>
       <PATH>Ç</PATH>
      </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>BACK</CODE>
-      <TEXTNO>002</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Exit</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>BACK</CODE>
-      <TEXTNO>003</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_CANCEL</TEXT_NAME>
-      <ICON_ID>@0W@</ICON_ID>
-      <FUN_TEXT>Cancel</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>P+</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Next page</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>P++</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Last Page</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>P-</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>Previous Page</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>P--</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <FUN_TEXT>First Page</FUN_TEXT>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>PICK</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_SELECT_DETAIL</TEXT_NAME>
-      <ICON_ID>@16@</ICON_ID>
-      <FUN_TEXT>Choose</FUN_TEXT>
-      <PATH>S</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>PRI</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_PRINT</TEXT_NAME>
-      <ICON_ID>@0X@</ICON_ID>
-      <FUN_TEXT>Print</FUN_TEXT>
-      <PATH>P</PATH>
-     </RSMPE_FUNT>
-     <RSMPE_FUNT>
-      <CODE>RW</CODE>
-      <TEXTNO>001</TEXTNO>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT_NAME>ICON_CANCEL</TEXT_NAME>
-      <ICON_ID>@0W@</ICON_ID>
-      <FUN_TEXT>Cancel</FUN_TEXT>
-      <PATH>A</PATH>
-     </RSMPE_FUNT>
     </FUN>
     <MEN>
      <RSMPE_MEN>
       <CODE>000001</CODE>
-      <NO>01</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>PRI</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000001</CODE>
-      <NO>02</NO>
-      <REF_TYPE>M</REF_TYPE>
-      <REF_CODE>000002</REF_CODE>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000001</CODE>
-      <NO>03</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%EX</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000002</CODE>
-      <NO>01</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%SL</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000002</CODE>
-      <NO>02</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%ST</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000002</CODE>
-      <NO>03</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%PC</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000003</CODE>
-      <NO>01</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>PICK</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000003</CODE>
-      <NO>02</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%SC</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000003</CODE>
-      <NO>03</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>%SC+</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000003</CODE>
-      <NO>04</NO>
-      <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>RW</REF_CODE>
-      <REF_NO>001</REF_NO>
-     </RSMPE_MEN>
-     <RSMPE_MEN>
-      <CODE>000004</CODE>
       <NO>01</NO>
       <REF_TYPE>F</REF_TYPE>
       <REF_CODE>BACK</REF_CODE>
@@ -296,26 +99,8 @@
      <RSMPE_MNLT>
       <CODE>000001</CODE>
       <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT>List</TEXT>
+      <TEXT>Liste</TEXT>
       <PATH>L</PATH>
-     </RSMPE_MNLT>
-     <RSMPE_MNLT>
-      <CODE>000002</CODE>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT>Save/Send</TEXT>
-      <PATH>S</PATH>
-     </RSMPE_MNLT>
-     <RSMPE_MNLT>
-      <CODE>000003</CODE>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT>Edit</TEXT>
-      <PATH>E</PATH>
-     </RSMPE_MNLT>
-     <RSMPE_MNLT>
-      <CODE>000004</CODE>
-      <TEXT_TYPE>S</TEXT_TYPE>
-      <TEXT>Goto</TEXT>
-      <PATH>G</PATH>
      </RSMPE_MNLT>
     </MTX>
     <ACT>
@@ -323,16 +108,6 @@
       <CODE>000001</CODE>
       <NO>01</NO>
       <MENUCODE>000001</MENUCODE>
-     </RSMPE_ACT>
-     <RSMPE_ACT>
-      <CODE>000001</CODE>
-      <NO>02</NO>
-      <MENUCODE>000003</MENUCODE>
-     </RSMPE_ACT>
-     <RSMPE_ACT>
-      <CODE>000001</CODE>
-      <NO>03</NO>
-      <MENUCODE>000004</MENUCODE>
      </RSMPE_ACT>
     </ACT>
     <PFK>
@@ -342,24 +117,8 @@
       <FUNCODE>BACK</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
-     <RSMPE_PFK>
-      <CODE>000001</CODE>
-      <PFNO>12</PFNO>
-      <FUNCODE>BACK</FUNCODE>
-      <FUNNO>003</FUNNO>
-     </RSMPE_PFK>
-     <RSMPE_PFK>
-      <CODE>000001</CODE>
-      <PFNO>15</PFNO>
-      <FUNCODE>BACK</FUNCODE>
-      <FUNNO>002</FUNNO>
-     </RSMPE_PFK>
     </PFK>
     <SET>
-     <RSMPE_STAF>
-      <STATUS>ALV</STATUS>
-      <FUNCTION>%EX</FUNCTION>
-     </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>ALV</STATUS>
       <FUNCTION>%PC</FUNCTION>
@@ -407,10 +166,6 @@
      <RSMPE_STAF>
       <STATUS>ALV</STATUS>
       <FUNCTION>PICK</FUNCTION>
-     </RSMPE_STAF>
-     <RSMPE_STAF>
-      <STATUS>ALV</STATUS>
-      <FUNCTION>PRI</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>ALV</STATUS>
