@@ -30,13 +30,13 @@ class zcl_dagnilak_batch definition
 
     methods call_transaction
       importing
-        tcode     type sy-tcode
-        dismode   type ctu_params-dismode default 'N'
-        nobinpt   type ctu_params-nobinpt optional
-        updmode   type ctu_params-updmode optional
+        value(tcode)   type sy-tcode
+        value(dismode) type ctu_params-dismode default 'N'
+        value(nobinpt) type ctu_params-nobinpt optional
+        value(updmode) type ctu_params-updmode optional
       exporting
-        !result   type sy-subrc
-        !messages type bapiret2_tab.
+        !result        type sy-subrc
+        !messages      type bapiret2_tab.
 endclass.
 
 
