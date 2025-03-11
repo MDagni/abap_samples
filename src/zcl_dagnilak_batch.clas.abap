@@ -6,23 +6,23 @@ class zcl_dagnilak_batch definition
 
     data mt_bdcdata type bdcdata_tab.
 
-    methods bdc_dynpro
+    methods dynpro
       importing
         !program type bdcdata-program
         !dynpro  type bdcdata-dynpro.
 
-    methods bdc_field
+    methods field
       importing
         fnam type bdcdata-fnam
         fval type simple.
 
-    methods bdc_field2
+    methods field2
       importing
         fnam  type bdcdata-fnam
         fval  type numeric
         meins type meins.
 
-    methods bdc_field3
+    methods field3
       importing
         fnam  type bdcdata-fnam
         fval  type numeric
@@ -42,7 +42,7 @@ endclass.
 
 class zcl_dagnilak_batch implementation.
 
-  method bdc_dynpro.
+  method dynpro.
 
     append value #( program  = program
                     dynpro   = dynpro
@@ -52,7 +52,7 @@ class zcl_dagnilak_batch implementation.
   endmethod.
 
 
-  method bdc_field.
+  method field.
 
     data ls_bdcdata type bdcdata.
 
@@ -64,7 +64,7 @@ class zcl_dagnilak_batch implementation.
   endmethod.
 
 
-  method bdc_field2.
+  method field2.
 
     data ls_bdcdata type bdcdata.
 
@@ -76,7 +76,7 @@ class zcl_dagnilak_batch implementation.
   endmethod.
 
 
-  method bdc_field3.
+  method field3.
 
     data ls_bdcdata type bdcdata.
 
