@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_DAGNILAK_SEND_MAIL</CLSNAME>
+    <LANGU>T</LANGU>
+    <DESCRIPT>Mail gönderme işlemleri</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>Mail gönderildi.</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
+   </TPOOL>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>E_MESSAGE</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Metin (100 krkt.)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>E_SUCCESS</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Genel gösterge</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_IMPORTANCE</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Doküman önceliği</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_MAIL_GROUP</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Dokümanın, klasörün ya da dağıtım listesinin adı</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_SENDER</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Gönderen E-posta adresi</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_SENDER_NAME</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Gönderen mail adresi tanımı</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_SUBJECT</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Mail konusu (kısa)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_SUBJECT_LONG</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Mail konusu (uzun)</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>I_TYPE</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Doküman tipi için kod</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>T_ATTACH</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Mail ile dosya gönderimi tablo tipi</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>T_RECEIVER</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Mail receiver</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SEND_MAIL</CMPNAME>
+     <SCONAME>T_TEXT</SCONAME>
+     <LANGU>T</LANGU>
+     <DESCRIPT>Tablo tipi olarak OBJCONT ve OBJHEAD</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
+  </asx:values>
+ </asx:abap>
+</abapGit>
