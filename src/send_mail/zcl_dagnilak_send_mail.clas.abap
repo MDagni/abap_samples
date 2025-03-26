@@ -17,7 +17,7 @@ class zcl_dagnilak_send_mail definition
         t_text         type soli_tab                  optional
         t_attach       type zdagnilak_mail_attach_tab optional
       exporting
-        e_message      type text100
+        e_message      type bapi_msg
         e_success      type flag.
 
 endclass.
@@ -39,8 +39,9 @@ class zcl_dagnilak_send_mail implementation.
           data(lo_sender) = cl_cam_address_bcs=>create_internet_address( i_address_string = i_sender
                                                                          i_address_name   = i_sender_name ).
           lo_send_request->set_sender( i_sender = lo_sender ).
-        catch cx_bcs into data(lv_cx_bcs). " TODO: variable is assigned but never used (ABAP cleaner)
-          e_message = 'Gönderen adresi hatalı'(004).
+        catch cx_bcs into data(lv_cx_bcs).
+          "Gönderen adresi hatalı:
+          e_message = |{ text-002 } { lv_cx_bcs->get_text( ) }|.
           return.
       endtry.
 
@@ -81,17 +82,11 @@ class zcl_dagnilak_send_mail implementation.
 
     loop at lt_receiver into data(ls_receiver).
       try.
-          data(lo_recipient) = cl_cam_address_bcs=>create_internet_address( i_address_string = ls_receiver-receiver ).
-          case 'X'.
-            when ls_receiver-cc.
-              lo_send_request->add_recipient( i_recipient = lo_recipient
-                                              i_copy      = abap_true ).
-            when ls_receiver-bcc.
-              lo_send_request->add_recipient( i_recipient  = lo_recipient
-                                              i_blind_copy = abap_true ).
-            when others.
-              lo_send_request->add_recipient( i_recipient = lo_recipient ).
-          endcase.
+          data(lo_recipient) = cl_cam_address_bcs=>create_internet_address( ls_receiver-receiver ).
+
+          lo_send_request->add_recipient( i_recipient  = lo_recipient
+                                          i_copy       = ls_receiver-cc
+                                          i_blind_copy = ls_receiver-bcc ).
 
         catch cx_bcs into lv_cx_bcs.
           continue.
@@ -99,7 +94,8 @@ class zcl_dagnilak_send_mail implementation.
     endloop.
 
     if sy-subrc <> 0.
-      e_message = 'Mail alıcısı bulunamadı.'(003).
+      "Mail alıcısı bulunamadı.
+      e_message = text-003.
       return.
     endif.
 
@@ -138,18 +134,18 @@ class zcl_dagnilak_send_mail implementation.
 
       catch cx_bcs into lx_bcs_exception.
         e_message = lx_bcs_exception->get_text( ).
+        return.
     endtry.
 
     try.
         e_success = lo_send_request->send( ).
+        "Mail gönderildi.
+        e_message = text-001.
 
       catch cx_bcs into lx_bcs_exception.
-        e_message = |{ e_message } { lx_bcs_exception->get_text( ) }|.
+        e_message = lx_bcs_exception->get_text( ).
+        return.
     endtry.
-
-    if e_success = abap_true.
-      e_message = |{ e_message } { text-001 }.|.
-    endif.
 
   endmethod.
 

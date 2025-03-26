@@ -18,6 +18,18 @@
      <ENTRY>Mail gönderildi.</ENTRY>
      <LENGTH>100</LENGTH>
     </item>
+    <item>
+     <ID>I</ID>
+     <KEY>002</KEY>
+     <ENTRY>Gönderen adresi hatalı:</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>003</KEY>
+     <ENTRY>Mail alıcısı bulunamadı.</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
    </TPOOL>
    <DESCRIPTIONS_SUB>
     <SEOSUBCOTX>
