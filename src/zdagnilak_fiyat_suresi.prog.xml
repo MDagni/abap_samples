@@ -152,36 +152,43 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>P_TABNAM</KEY>
-     <ENTRY>.</ENTRY>
-     <LENGTH>21</LENGTH>
-     <SPLIT>D</SPLIT>
-    </item>
-    <item>
-     <ID>S</ID>
      <KEY>P_TEST</KEY>
      <ENTRY>Deneme modu</ENTRY>
      <LENGTH>19</LENGTH>
     </item>
     <item>
      <ID>S</ID>
-     <KEY>S_VKORG</KEY>
+     <KEY>S_KUNNR</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>15</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_TABNAM</KEY>
      <ENTRY>.</ENTRY>
      <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_VKORG</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>27</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
      <KEY>S_VTWEG</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>22</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
      <KEY>S_ZTERM</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>20</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
    </TPOOL>

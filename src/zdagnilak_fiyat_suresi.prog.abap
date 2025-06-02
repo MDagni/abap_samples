@@ -1,23 +1,47 @@
 report zdagnilak_fiyat_suresi line-size 255.
 
-tables komg.
+tables: t681,
+        komg.
 
-parameters: p_tabnam type t681-kotab  obligatory default 'A882',
-            p_kschl  type rv13a-kschl obligatory default 'FYAT',
-            p_datam  type rv130-datam obligatory default '20231012',
+parameters: p_kschl  type rv13a-kschl obligatory default 'FYAT',
+            p_datam  type rv130-datam obligatory default '20250518',
             p_datbi  type rv13a-datbi obligatory default '99991231',
             p_dismod type ctu_params-dismode obligatory default 'N',
             p_test   as checkbox default abap_true.
 selection-screen skip.
-select-options: s_vkorg for komg-vkorg,
-                s_vtweg for komg-vtweg,
-                s_zterm for komg-zterm.
+select-options: s_tabnam for t681-kotab,
+                s_vkorg  for komg-vkorg,
+                s_vtweg  for komg-vtweg,
+                s_zterm  for komg-zterm,
+                s_kunnr  for komg-kunnr.
 
 class lcl_main definition.
 
   public section.
     methods run.
-    methods f4_tabnam.
+
+    methods f4_tabnam
+      changing
+        c_tabnam type t681-kotab.
+
+endclass.
+
+
+class lcl_table definition.
+
+  public section.
+
+    data mv_tabnam type t681-kotab.
+
+    methods constructor
+      importing
+        i_tabnam type t681-kotab.
+
+    methods get_keys.
+
+    methods clear_memory_ids.
+
+    methods do_batch.
 
   private section.
 
@@ -39,9 +63,6 @@ class lcl_main definition.
     data gt_values type table of ty_values.
     data gs_t681   type t681.
 
-    methods get_keys.
-
-    methods do_batch.
 endclass.
 
 
@@ -75,8 +96,11 @@ endclass.
 initialization.
   data(go_main) = new lcl_main( ).
 
-at selection-screen on value-request for p_tabnam.
-  go_main->f4_tabnam( ).
+at selection-screen on value-request for s_tabnam-low.
+  go_main->f4_tabnam( changing c_tabnam = s_tabnam-low ).
+
+at selection-screen on value-request for s_tabnam-high.
+  go_main->f4_tabnam( changing c_tabnam = s_tabnam-high ).
 
 start-of-selection.
 
@@ -110,7 +134,7 @@ class lcl_main implementation.
     endif.
 
     if ls_t681-kotab is not initial.
-      p_tabnam = ls_t681-kotab.
+      c_tabnam = ls_t681-kotab.
     endif.
 
   endmethod.
@@ -118,9 +142,54 @@ class lcl_main implementation.
 
   method run.
 
-    get_keys( ).
+    data: lt_t682ia type standard table of t682ia,
+          lv_tabnam type t681-kotab.
 
-    do_batch( ).
+    select single * from t685
+      into @data(ls_t685)
+      where kvewe = 'A'
+        and kappl = 'V'
+        and kschl = @p_kschl.
+    if sy-subrc <> 0.
+      return.
+    endif.
+
+    call function 'COND_READ_ACCESSES'
+      exporting
+        i_kvewe    = 'A'
+        i_kappl    = 'V'
+        i_kozgf    = ls_t685-kozgf
+      tables
+        t682ia_tab = lt_t682ia.
+
+    loop at lt_t682ia into data(ls_t682ia).
+
+      lv_tabnam = ls_t682ia-kvewe && ls_t682ia-kotabnr.
+
+      if lv_tabnam not in s_tabnam.
+        continue.
+      endif.
+
+      data(lo_table) = new lcl_table( lv_tabnam ).
+
+      lo_table->get_keys( ).
+
+      lo_table->clear_memory_ids( ).
+
+      lo_table->do_batch( ).
+
+    endloop.
+
+  endmethod.
+
+endclass.
+
+
+class lcl_table implementation.
+
+  method constructor.
+
+    mv_tabnam = i_tabnam.
 
   endmethod.
 
@@ -131,18 +200,16 @@ class lcl_main implementation.
           lv_group  type string,
           lv_where  type string.
 
-    select single *
-           from t681
-           into @gs_t681
-           where kotab = @p_tabnam.
+    select single * from t681
+      into @gs_t681
+      where kotab = @mv_tabnam.
 
-    select sefeld
-           into table @gt_fields
-           from t681e
-           where kvewe   = @gs_t681-kvewe
-             and kotabnr = @gs_t681-kotabnr
-             and fsetyp  = 'A'
-           order by fselnr.
+    select sefeld into table @gt_fields
+      from t681e
+      where kvewe   = @gs_t681-kvewe
+        and kotabnr = @gs_t681-kotabnr
+        and fsetyp  = 'A'
+      order by fselnr.
 
     if gt_fields is not initial.
       loop at gt_fields assigning field-symbol(<lv_field>).
@@ -157,15 +224,19 @@ class lcl_main implementation.
     endif.
 
     if line_exists( gt_fields[ table_line = 'VKORG' ] ).
-      lv_where = lv_where && `vkorg in @s_vkorg and `.
+      lv_where = |{ lv_where }vkorg in @s_vkorg and |.
     endif.
 
     if line_exists( gt_fields[ table_line = 'VTWEG' ] ).
-      lv_where = lv_where && `vtweg in @s_vtweg and `.
+      lv_where = |{ lv_where }vtweg in @s_vtweg and |.
     endif.
 
     if line_exists( gt_fields[ table_line = 'ZTERM' ] ).
-      lv_where = lv_where && `zterm in @s_zterm and `.
+      lv_where = |{ lv_where }zterm in @s_zterm and |.
+    endif.
+
+    if line_exists( gt_fields[ table_line = 'KUNNR' ] ).
+      lv_where = |{ lv_where }kunnr in @s_kunnr and |.
     endif.
 
     if lv_where is not initial.
@@ -173,17 +244,37 @@ class lcl_main implementation.
                             len = strlen( lv_where ) - 4 ).
     endif.
 
-    select distinct (lv_fields)
-           into corresponding fields of table @gt_values
-           from (p_tabnam)
-           where kappl = @gs_t681-kappl
-             and kschl = @p_kschl
-             and datbi <> '99991231'
-             and datbi >= @p_datam
-             and datab <= @p_datam
-             and (lv_where)
-           group by (lv_group)
-           order by (lv_group).
+    select distinct (lv_fields) into corresponding fields of table @gt_values
+      from (mv_tabnam)
+      where kappl = @gs_t681-kappl
+        and kschl = @p_kschl
+        and datbi >= @p_datam
+        and datab <= @p_datam
+        and datbi <> @p_datbi
+        and (lv_where)
+      group by (lv_group)
+      order by (lv_group).
+
+  endmethod.
+
+
+  method clear_memory_ids.
+
+    data lt_fields type standard table of dd03p.
+
+    check gt_values is not initial.
+
+    call function 'DDIF_TABL_GET'
+      exporting
+        name      = 'KOMG'
+      tables
+        dd03p_tab = lt_fields.
+
+    loop at lt_fields assigning field-symbol(<ls_fields>) where memoryid is not initial.
+
+      set parameter id <ls_fields>-memoryid field ''.
+
+    endloop.
 
   endmethod.
 
@@ -196,12 +287,13 @@ class lcl_main implementation.
 
     check gt_values is not initial.
 
-    select single *
-           into @data(ls_t685)
-           from t685
-           where kvewe = @gs_t681-kvewe
-             and kappl = @gs_t681-kappl
-             and kschl = @p_kschl.
+    write / mv_tabnam color col_heading.
+
+    select single * into @data(ls_t685)
+      from t685
+      where kvewe = @gs_t681-kvewe
+        and kappl = @gs_t681-kappl
+        and kschl = @p_kschl.
 
     call function 'COND_READ_ACCESSES'
       exporting
@@ -244,7 +336,7 @@ class lcl_main implementation.
 
         lt_tables2 = lt_tables.
 
-        data(lv_line) = conv numc2( line_index( lt_tables2[ kotabnr = p_tabnam+1 ] ) ).
+        data(lv_line) = conv numc2( line_index( lt_tables2[ kotabnr = mv_tabnam+1 ] ) ).
 
         lo_batch->bdc_dynpro( program = 'SAPLV14A'
                               dynpro  = '0100' ).
@@ -274,7 +366,7 @@ class lcl_main implementation.
 
       endif.
 
-      lo_batch->bdc_dynpro( program = |RV13{ p_tabnam }|
+      lo_batch->bdc_dynpro( program = |RV13{ mv_tabnam }|
                             dynpro  = '1000' ).
       lo_batch->bdc_field( fnam = 'BDC_OKCODE'
                            fval = '=ONLI' ).
@@ -288,12 +380,12 @@ class lcl_main implementation.
       enddo.
 
       lo_batch->bdc_dynpro( program = 'SAPMV13A'
-                            dynpro  = |1{ p_tabnam+1 }| ).
+                            dynpro  = |1{ mv_tabnam+1 }| ).
       lo_batch->bdc_field( fnam = 'BDC_OKCODE'
                            fval = '=MARL' ).
 
       lo_batch->bdc_dynpro( program = 'SAPMV13A'
-                            dynpro  = |1{ p_tabnam+1 }| ).
+                            dynpro  = |1{ mv_tabnam+1 }| ).
       lo_batch->bdc_field( fnam = 'BDC_OKCODE'
                            fval = '=TICH' ).
 
@@ -307,7 +399,7 @@ class lcl_main implementation.
                            fval = p_datbi ).
 
       lo_batch->bdc_dynpro( program = 'SAPMV13A'
-                            dynpro  = |1{ p_tabnam+1 }| ).
+                            dynpro  = |1{ mv_tabnam+1 }| ).
       lo_batch->bdc_field( fnam = 'BDC_OKCODE'
                            fval = '=SICH' ).
 
@@ -325,6 +417,8 @@ class lcl_main implementation.
       refresh lt_messages.
 
     endloop.
+
+    uline.
 
   endmethod.
 
