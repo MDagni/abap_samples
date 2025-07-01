@@ -1,8 +1,10 @@
 ************************************************************************
 * Developer        : Mehmet Dağnilak
 * Description      : ALV Layout download/upload
-*   Bir sistemdeki ALV layout'larının diğer bir sisteme taşınması
-*   işlemini yapar. Canlıdan Dev/Test sistemlerine taşınma yapılabilir.
+*   Bir sistemdeki ALV layout'larının diğer bir sisteme taşınması için
+*   export/import işlemlerini yapar. Dev-Test-Canlı sistemleri arasında
+*   taşıma yapılabilir.
+
 ************************************************************************
 * History
 *----------------------------------------------------------------------*
@@ -14,15 +16,21 @@
 
 report zdagnilak_alv_layout_download line-size 255.
 
-tables: ltdx.
+tables ltdx.
 
-parameters: p_downl radiobutton group op.
-select-options: s_report for ltdx-report,
-                s_handle for ltdx-handle,
-                s_varian for ltdx-variant,
-                s_user   for ltdx-username default space.
-selection-screen skip.
-parameters: p_upload radiobutton group op.
+selection-screen begin of block b1 with frame.
+  parameters p_downl radiobutton group op user-command btn.
+  select-options: s_report for ltdx-report   modif id dow,
+                  s_handle for ltdx-handle   modif id dow,
+                  s_varian for ltdx-variant  modif id dow,
+                  s_user   for ltdx-username modif id dow.
+  selection-screen skip.
+  parameters p_upload radiobutton group op.
+selection-screen end of block b1.
+selection-screen begin of block b2 with frame.
+  selection-screen comment /1(79) text-001.
+  selection-screen comment /1(79) text-002.
+selection-screen end of block b2.
 
 types: begin of ty_contents,
          s_ltvariant  type ltvariant,
@@ -32,13 +40,25 @@ types: begin of ty_contents,
          i_dblayout   type standard table of ltdxdata with default key,
        end of ty_contents.
 
-start-of-selection .
+at selection-screen output.
 
-  if p_downl eq abap_true.
-    perform download.
-  else.
-    perform upload.
+  if p_upload = abap_true.
+    loop at screen.
+      if screen-group1 = 'DOW'.
+        screen-input = 0.
+        modify screen.
+      endif.
+    endloop.
   endif.
+
+start-of-selection.
+
+  case abap_true.
+    when p_downl.
+      perform download.
+    when p_upload.
+      perform upload.
+  endcase.
 
 *&---------------------------------------------------------------------*
 *&      Form  DOWNLOAD
@@ -84,6 +104,10 @@ form download.
     return.
   endif.
 
+  sort lt_variants.
+
+  format color col_normal.
+
   loop at lt_variants assigning <ls_variant>.
 
     append initial line to lt_contents assigning <ls_contents>.
@@ -91,6 +115,7 @@ form download.
 
     write:/ <ls_contents>-s_ltvariant-report,
             <ls_contents>-s_ltvariant-handle,
+            <ls_contents>-s_ltvariant-username,
             <ls_contents>-s_ltvariant-variant,
             <ls_contents>-s_ltvariant-text,
             <ls_contents>-s_ltvariant-defaultvar.
@@ -130,17 +155,13 @@ form download.
     tables
       binary_tab    = lt_binary.
 
-  call method cl_gui_frontend_services=>file_save_dialog
-    exporting
-      default_extension = '.layout'
-      default_file_name = s_report-low && `.layout`
-      file_filter       = `ALV layouts|*.layout|`
-    changing
-      filename          = lv_filename
-      path              = lv_path
-      fullpath          = lv_fullpath
-    exceptions
-      others            = 5.
+  cl_gui_frontend_services=>file_save_dialog( exporting  default_extension = '.alv'
+                                                         default_file_name = |{ s_report-low }.alv|
+                                                         file_filter       = `ALV layouts (*.alv)|*.alv|`
+                                              changing   filename          = lv_filename
+                                                         path              = lv_path
+                                                         fullpath          = lv_fullpath
+                                              exceptions others            = 5 ).
 
   if sy-subrc <> 0.
     message id sy-msgid type sy-msgty number sy-msgno
@@ -149,17 +170,15 @@ form download.
     return.
   endif.
 
-  check lv_fullpath is not initial.
+  if lv_fullpath is initial.
+    return.
+  endif.
 
-  call method cl_gui_frontend_services=>gui_download
-    exporting
-      bin_filesize = lv_size
-      filename     = lv_fullpath
-      filetype     = 'BIN'
-    changing
-      data_tab     = lt_binary
-    exceptions
-      others       = 24.
+  cl_gui_frontend_services=>gui_download( exporting  bin_filesize = lv_size
+                                                     filename     = lv_fullpath
+                                                     filetype     = 'BIN'
+                                          changing   data_tab     = lt_binary
+                                          exceptions others       = 24 ).
 
   if sy-subrc <> 0.
     message id sy-msgid type sy-msgty number sy-msgno
@@ -168,9 +187,10 @@ form download.
     return.
   endif.
 
+  skip.
   write:/ 'Dosya indirildi:', lv_fullpath.
 
-endform.          " DOWNLOAD
+endform.
 
 
 *&---------------------------------------------------------------------*
@@ -209,20 +229,18 @@ form upload.
         default_button = '2'
       importing
         answer         = lv_answer.
-    check lv_answer = 1.
+    if lv_answer <> 1.
+      return.
+    endif.
   endif.
 
 **********************************************************************
-  call method cl_gui_frontend_services=>file_open_dialog
-    exporting
-      default_extension = '.layout'
-      file_filter       = `ALV layouts|*.layout|`
-      multiselection    = abap_true
-    changing
-      file_table        = lt_files
-      rc                = lv_rc
-    exceptions
-      others            = 5.
+  cl_gui_frontend_services=>file_open_dialog( exporting  default_extension = '.alv'
+                                                         file_filter       = `ALV layouts (*.alv)|*.alv|`
+                                                         multiselection    = abap_true
+                                              changing   file_table        = lt_files
+                                                         rc                = lv_rc
+                                              exceptions others            = 5 ).
 
   if sy-subrc <> 0.
     message id sy-msgid type sy-msgty number sy-msgno
@@ -231,22 +249,19 @@ form upload.
     return.
   endif.
 
-  check lt_files is not initial.
+  if lt_files is initial.
+    return.
+  endif.
 
   loop at lt_files assigning <ls_files>.
 
     write:/ 'Dosya yükleniyor:', (*) <ls_files>-filename.
 
-    call method cl_gui_frontend_services=>gui_upload
-      exporting
-        filename   = conv #( <ls_files>-filename )
-        filetype   = 'BIN'
-      importing
-        filelength = lv_size
-      changing
-        data_tab   = lt_binary
-      exceptions
-        others     = 19.
+    cl_gui_frontend_services=>gui_upload( exporting  filename   = conv #( <ls_files>-filename )
+                                                     filetype   = 'BIN'
+                                          importing  filelength = lv_size
+                                          changing   data_tab   = lt_binary
+                                          exceptions others     = 19 ).
 
     if sy-subrc <> 0.
       message id sy-msgid type sy-msgty number sy-msgno
@@ -276,7 +291,7 @@ form upload.
     try.
         import lt_contents from data buffer lv_xcontents.
       catch cx_root into data(lx_root).
-        write:/ lx_root->get_text( ).
+        write / lx_root->get_text( ).
         return.
     endtry.
 
@@ -345,4 +360,4 @@ form upload.
 
   commit work.
 
-endform.          " UPLOAD
+endform.

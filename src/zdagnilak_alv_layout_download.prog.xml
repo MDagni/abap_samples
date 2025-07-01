@@ -11,6 +11,18 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>Download modunda tüm layout&apos;lar tek bir dosyaya kaydedilir.</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>002</KEY>
+     <ENTRY>Upload modunda birden fazla dosya seçebilirsiniz.</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
      <ENTRY>ALV Layout download/upload</ENTRY>
      <LENGTH>26</LENGTH>
@@ -31,28 +43,28 @@
      <ID>S</ID>
      <KEY>S_HANDLE</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>16</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
      <KEY>S_REPORT</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>17</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
      <KEY>S_USER</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>21</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
      <ID>S</ID>
      <KEY>S_VARIAN</KEY>
      <ENTRY>.</ENTRY>
-     <LENGTH>9</LENGTH>
+     <LENGTH>13</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
