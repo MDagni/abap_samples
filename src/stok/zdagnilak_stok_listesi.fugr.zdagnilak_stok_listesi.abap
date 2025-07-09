@@ -15,15 +15,14 @@ FUNCTION ZDAGNILAK_STOK_LISTESI.
   include atpgxval.
   include mm61xval.
 
-  data: p_atpcsx  like atpcs occurs 0 with header line,
-        p_atpdsx  like atpds occurs 0 with header line,
-        p_mdvex   like mdve occurs 0 with header line,
-        p_t441vx  like t441v occurs 0 with header line,
-        p_tmvfx   like tmvf occurs 0 with header line,
-        p_atpdiax like atpdia occurs 0 with header line,
-        p_atpca   like atpca,
-        p_atpcb   like atpcb,
-        lv_lgort  type mard-lgort.
+  data: p_atpcsx  type table of atpcs with header line,
+        p_atpdsx  type table of atpds with header line,
+        p_mdvex   type table of mdve with header line,
+        p_t441vx  type table of t441v with header line,
+        p_tmvfx   type table of tmvf with header line,
+        p_atpdiax type table of atpdia with header line,
+        p_atpca   type atpca,
+        p_atpcb   type atpcb.
 
   ranges: r_werks for mard-werks,
           r_lgort for mard-lgort.
@@ -39,8 +38,6 @@ FUNCTION ZDAGNILAK_STOK_LISTESI.
     r_lgort-low = i_lgort.
     append r_lgort.
   endif.
-
-  lv_lgort = i_lgort.
 
   select werks from marc
     into table @data(lt_marc)
@@ -79,7 +76,7 @@ FUNCTION ZDAGNILAK_STOK_LISTESI.
     "p_atpcsx-vbtyp  = 'C'.            "Satış siparişi
     p_atpcsx-xline  = 1.              "satır no
     p_atpcsx-bdmng  = 999999.         "İstenen miktar
-    p_atpcsx-lgort  = lv_lgort.
+    p_atpcsx-lgort  = i_lgort.
 
     append p_atpcsx.
 
