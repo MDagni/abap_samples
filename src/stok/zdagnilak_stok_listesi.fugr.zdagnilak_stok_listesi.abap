@@ -111,18 +111,18 @@ FUNCTION ZDAGNILAK_STOK_LISTESI.
     p_atpdsx-ewerk = p_atpcsx-werks.
     modify p_atpdsx transporting ewerk where ewerk = ''.
 
-*    "ATP tablosundaki miktarları değiştir
-*    loop at p_atpdsx where delkz      = 'LB'
-*                       and atpnr+6(4) = lv_lgort.
+*    "ATP miktarları yerine teyit edilen miktarı koy
+*    if i_lgort   is not initial and
+*       p_mdvex[] is not initial.
 *
-*      "Teyit edilen miktarı koy
 *      assign p_mdvex[ 1 ] to field-symbol(<p_mdvex>).
-*      if sy-subrc = 0.
-*        p_atpdsx-qty = <p_mdvex>-mng02.
-*      endif.
 *
-*      modify p_atpdsx.
-*    endloop.
+*      loop at p_atpdsx where delkz      = 'LB'
+*                         and atpnr+6(4) = i_lgort.
+*        p_atpdsx-qty = <p_mdvex>-mng02.
+*        modify p_atpdsx.
+*      endloop.
+*    endif.
 
     append lines of p_atpdsx[] to t_stok[].
     append lines of p_atpcsx[] to t_ihtiyac[].
