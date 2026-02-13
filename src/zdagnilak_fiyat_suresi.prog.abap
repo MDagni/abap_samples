@@ -3,8 +3,8 @@ report zdagnilak_fiyat_suresi line-size 255.
 tables: t681,
         komg.
 
-parameters: p_kschl  type rv13a-kschl obligatory default 'FYAT',
-            p_datam  type rv130-datam obligatory default '20250518',
+parameters: p_kschl  type rv13a-kschl obligatory default 'ZF01',
+            p_datam  type rv130-datam obligatory default '20250714',
             p_datbi  type rv13a-datbi obligatory default '99991231',
             p_dismod type ctu_params-dismode obligatory default 'N',
             p_test   as checkbox default abap_true.
@@ -255,6 +255,9 @@ class lcl_table implementation.
       group by (lv_group)
       order by (lv_group).
 
+    "Hiç key field yoksa count 0 gelebiliyor.
+    delete gt_values where count = 0.
+
   endmethod.
 
 
@@ -285,9 +288,14 @@ class lcl_table implementation.
           lt_tables2 type standard table of t682ia.
     field-symbols <lv_f> type ty_values-f001.
 
-    check gt_values is not initial.
-
     write / mv_tabnam color col_heading.
+
+    if gt_values is initial.
+      new-line.
+      write 0.
+      uline.
+      return.
+    endif.
 
     select single * into @data(ls_t685)
       from t685
@@ -452,7 +460,8 @@ class lcl_batch implementation.
   method call_transaction.
 
     data: lt_message type table of bdcmsgcoll,
-          ls_opt     type ctu_params.
+          ls_opt     type ctu_params,
+          ls_return  type bapiret2.
 
     ls_opt-dismode = dismode.
     ls_opt-nobinpt = nobinpt.
@@ -467,10 +476,27 @@ class lcl_batch implementation.
     "Batch input mesajları her zaman hatadır, ama success olarak geliyor.
     modify lt_message from value #( msgtyp = 'E' ) transporting msgtyp where msgid = '00'.
 
-    call function 'CONVERT_BDCMSGCOLL_TO_BAPIRET2'
-      tables
-        imt_bdcmsgcoll = lt_message
-        ext_return     = messages.
+*    call function 'CONVERT_BDCMSGCOLL_TO_BAPIRET2'
+*      tables
+*        imt_bdcmsgcoll = lt_message
+*        ext_return     = messages.
+
+    loop at lt_message[] assigning field-symbol(<ls_message>).
+
+      call function 'BALW_BAPIRETURN_GET2'
+        exporting
+          type   = <ls_message>-msgtyp
+          cl     = <ls_message>-msgid
+          number = conv sy-msgno( <ls_message>-msgnr )
+          par1   = <ls_message>-msgv1(50)
+          par2   = <ls_message>-msgv2(50)
+          par3   = <ls_message>-msgv3(50)
+          par4   = <ls_message>-msgv4(50)
+        importing
+          return = ls_return.
+
+      append ls_return to messages[].
+    endloop.
 
     refresh mt_bdcdata.
 
