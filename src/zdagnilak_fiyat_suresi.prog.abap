@@ -3,8 +3,8 @@ report zdagnilak_fiyat_suresi line-size 255.
 tables: t681,
         komg.
 
-parameters: p_kschl  type rv13a-kschl obligatory default 'ZF01',
-            p_datam  type rv130-datam obligatory default '20250714',
+parameters: p_kschl  type rv13a-kschl obligatory default 'FYAT',
+            p_datam  type rv130-datam obligatory default '20250518',
             p_datbi  type rv13a-datbi obligatory default '99991231',
             p_dismod type ctu_params-dismode obligatory default 'N',
             p_test   as checkbox default abap_true.

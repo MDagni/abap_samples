@@ -37,6 +37,13 @@ class zcl_dagnilak_batch definition
       exporting
         !result        type sy-subrc
         !messages      type bapiret2_tab.
+
+    class-methods convert_bdcmsgcoll
+      importing
+        it_bdcmsgcoll    type tab_bdcmsgcoll
+      returning
+        value(et_return) type bapiret2_tab.
+
 endclass.
 
 
@@ -116,6 +123,38 @@ class zcl_dagnilak_batch implementation.
         ext_return     = messages.
 
     refresh mt_bdcdata.
+
+  endmethod.
+
+
+  method convert_bdcmsgcoll.
+
+    data ls_return type bapiret2.
+
+    loop at it_bdcmsgcoll into data(ls_bdcmsgcoll).
+
+      ls_return-type       = ls_bdcmsgcoll-msgtyp.
+      ls_return-id         = ls_bdcmsgcoll-msgid.
+      ls_return-number     = ls_bdcmsgcoll-msgnr.
+      ls_return-message_v1 = ls_bdcmsgcoll-msgv1.
+      ls_return-message_v2 = ls_bdcmsgcoll-msgv2.
+      ls_return-message_v3 = ls_bdcmsgcoll-msgv3.
+      ls_return-message_v4 = ls_bdcmsgcoll-msgv4.
+
+      call function 'BALW_BAPIRETURN_GET2'
+        exporting
+          type   = ls_return-type
+          cl     = ls_return-id
+          number = ls_return-number
+          par1   = ls_return-message_v1
+          par2   = ls_return-message_v2
+          par3   = ls_return-message_v3
+          par4   = ls_return-message_v4
+        importing
+          return = ls_return.
+
+      append ls_return to et_return.
+    endloop.
 
   endmethod.
 
