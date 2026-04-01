@@ -109,6 +109,10 @@ class lcl_main implementation.
 
     case abap_true.
       when program.
+        if s_prog[] is initial.
+          return.
+        endif.
+
         select name from trdir
           into table @data(lt_trdir)
           where name in @s_prog
@@ -119,11 +123,14 @@ class lcl_main implementation.
           return.
         endif.
 
+        clear lv_msg.
+
         loop at lt_trdir assigning field-symbol(<ls_trdir>).
           copy_program( <ls_trdir>-name ).
+          lv_msg = |{ lv_msg },{ <ls_trdir>-name }|.
         endloop.
 
-        message |{ lines( lt_trdir ) } program kopyalandı| type 'S'.
+        message |{ lv_msg+1 } kopyalandı| type 'S'.
 
       when function.
         copy_function( ).
