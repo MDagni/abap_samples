@@ -123,6 +123,8 @@ class lcl_main implementation.
           copy_program( <ls_trdir>-name ).
         endloop.
 
+        message |{ lines( lt_trdir ) } program kopyalandı| type 'S'.
+
       when function.
         copy_function( ).
 
@@ -228,8 +230,6 @@ class lcl_main implementation.
       endif.
 
     endif.
-
-    message |{ i_program } kopyalandı| type 'S'.
 
   endmethod.
 
