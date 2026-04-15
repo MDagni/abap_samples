@@ -3,7 +3,8 @@ report zdagnilak_fiyat_suresi line-size 255.
 tables: t681,
         komg.
 
-parameters: p_kschl  type rv13a-kschl obligatory default 'FYAT',
+parameters: p_kappl  type rv13a-kappl obligatory default 'V',
+            p_kschl  type rv13a-kschl obligatory default 'FYAT',
             p_datam  type rv130-datam obligatory default '20250518',
             p_datbi  type rv13a-datbi obligatory default '99991231',
             p_dismod type ctu_params-dismode obligatory default 'N',
@@ -13,7 +14,9 @@ select-options: s_tabnam for t681-kotab,
                 s_vkorg  for komg-vkorg,
                 s_vtweg  for komg-vtweg,
                 s_zterm  for komg-zterm,
-                s_kunnr  for komg-kunnr.
+                s_kunnr  for komg-kunnr,
+                s_lifnr  for komg-lifnr,
+                s_matnr  for komg-matnr.
 
 class lcl_main definition.
 
@@ -115,7 +118,7 @@ class lcl_main implementation.
 
     call function 'RV_GET_CONDITION_TABLES'
       exporting
-        application            = 'V'
+        application            = p_kappl
         condition_type         = p_kschl
         condition_use          = 'A'
         like_pf4               = abap_true
@@ -148,7 +151,7 @@ class lcl_main implementation.
     select single * from t685
       into @data(ls_t685)
       where kvewe = 'A'
-        and kappl = 'V'
+        and kappl = @p_kappl
         and kschl = @p_kschl.
     if sy-subrc <> 0.
       return.
@@ -157,7 +160,7 @@ class lcl_main implementation.
     call function 'COND_READ_ACCESSES'
       exporting
         i_kvewe    = 'A'
-        i_kappl    = 'V'
+        i_kappl    = p_kappl
         i_kozgf    = ls_t685-kozgf
       tables
         t682ia_tab = lt_t682ia.
@@ -237,6 +240,14 @@ class lcl_table implementation.
 
     if line_exists( gt_fields[ table_line = 'KUNNR' ] ).
       lv_where = |{ lv_where }kunnr in @s_kunnr and |.
+    endif.
+
+    if line_exists( gt_fields[ table_line = 'LIFNR' ] ).
+      lv_where = |{ lv_where }lifnr in @s_lifnr and |.
+    endif.
+
+    if line_exists( gt_fields[ table_line = 'MATNR' ] ).
+      lv_where = |{ lv_where }matnr in @s_matnr and |.
     endif.
 
     if lv_where is not initial.
@@ -411,7 +422,9 @@ class lcl_table implementation.
       lo_batch->bdc_field( fnam = 'BDC_OKCODE'
                            fval = '=SICH' ).
 
-      lo_batch->call_transaction( exporting tcode    = 'VK12'
+      lo_batch->call_transaction( exporting tcode    = switch #( p_kappl
+                                                                 when 'V' then 'VK12'
+                                                                 when 'M' then 'MEK2' )
                                             dismode  = p_dismod
                                   importing result   = data(lv_result)
                                             messages = data(lt_messages) ).

@@ -145,6 +145,13 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>P_KAPPL</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>16</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_KSCHL</KEY>
      <ENTRY>.</ENTRY>
      <LENGTH>18</LENGTH>
@@ -165,9 +172,23 @@
     </item>
     <item>
      <ID>S</ID>
-     <KEY>S_TABNAM</KEY>
+     <KEY>S_LIFNR</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>14</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_MATNR</KEY>
      <ENTRY>.</ENTRY>
      <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_TABNAM</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>21</LENGTH>
      <SPLIT>D</SPLIT>
     </item>
     <item>
