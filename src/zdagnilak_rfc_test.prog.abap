@@ -32,7 +32,7 @@ parameters p_debug as checkbox.
 
 "Ortak elemanlar
 selection-screen begin of screen 1999 as subscreen.
-  select-options s_matno for so-matno.
+  select-options s_matno for so-matno no intervals.
   select-options s_matnr for so-matnr.
   select-options s_kunnr for so-kunnr.
   parameters p_kunnr type kunnr.
@@ -98,9 +98,9 @@ endclass.
 class lcl_tables definition final create private.
 
   public section.
-    types lcl_table_type type ref to lcl_tables.
+    types ty_tables type ref to lcl_tables.
 
-    class-data gt_tables     type standard table of lcl_table_type.
+    class-data gt_tables     type standard table of ty_tables.
     class-data gv_active_tab type sy-tabix.
 
     class-methods add
@@ -151,9 +151,9 @@ class lcl_functions implementation.
   method constructor.
 
     "Key değerleri selection-screen'deki screen numarasına karşılık gelir.
-    gt_functions = value #( ( key = '1001' text = 'Malzeme anaverisi (ZBRS_UBY_002)' )
+    gt_functions = value #( ( key = '1001' text = 'Malzeme anaverisi       (ZBRS_UBY_002)' )
                             ( key = '1002' text = 'B2B/CIS Fiyat listesi (ZBRS_HYB_002)' )
-                            ( key = '1003' text = 'B2B Stok listesi (ZBRS_SD_GET_B2B_STOCK)' ) ).
+                            ( key = '1003' text = 'B2B Stok listesi       (ZBRS_SD_GET_B2B_STOCK)' ) ).
 
   endmethod.
 
@@ -164,12 +164,9 @@ class lcl_functions implementation.
     go_start_time->get_runtime( ).
 
     case p_funct.
-      when '1001'.
-        go_functions->call_zbrs_uby_002( ).
-      when '1002'.
-        go_functions->call_zbrs_hyb_002( ).
-      when '1003'.
-        go_functions->call_zbrs_sd_get_b2b_stock( ).
+      when '1001'. go_functions->call_zbrs_uby_002( ).
+      when '1002'. go_functions->call_zbrs_hyb_002( ).
+      when '1003'. go_functions->call_zbrs_sd_get_b2b_stock( ).
     endcase.
 
   endmethod.
@@ -454,7 +451,7 @@ class lcl_tables implementation.
     er_table = new #( ).
     append er_table to gt_tables.
 
-    er_table->mv_name  = name.
+    er_table->mv_name  = |{ name } ({ lines( t_table ) number = user })|.
     er_table->mv_index = lines( gt_tables ).
     get reference of t_table into er_table->mt_table.
 
@@ -523,6 +520,11 @@ class lcl_tables implementation.
 
           "Conversion exit'i devre dışı bırak
           lo_column->set_edit_mask( '' ).
+
+          "Xstring tipindeki alanlar sağa dayalı görünüyor, sola dayalı olmalı.
+          if lo_column->get_ddic_datatype( ) = 'RSTR'.
+            lo_column->set_alignment( if_salv_c_alignment=>left ).
+          endif.
 
         endloop.
 
