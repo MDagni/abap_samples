@@ -10,40 +10,6 @@
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <DYNPROS>
-    <item>
-     <HEADER>
-      <PROGRAM>ZDAGNILAK_TRANSLATOR</PROGRAM>
-      <SCREEN>0100</SCREEN>
-      <LANGUAGE>T</LANGUAGE>
-      <DESCRIPT>ALV ekranı</DESCRIPT>
-      <TYPE>N</TYPE>
-      <NEXTSCREEN>0100</NEXTSCREEN>
-      <LINES>200</LINES>
-      <COLUMNS>255</COLUMNS>
-      <NO_TOOLBAR>X</NO_TOOLBAR>
-     </HEADER>
-     <CONTAINERS>
-      <RPY_DYCATT>
-       <TYPE>SCREEN</TYPE>
-       <NAME>SCREEN</NAME>
-      </RPY_DYCATT>
-     </CONTAINERS>
-     <FIELDS>
-      <RPY_DYFATC>
-       <CONT_TYPE>SCREEN</CONT_TYPE>
-       <CONT_NAME>SCREEN</CONT_NAME>
-       <TYPE>OKCODE</TYPE>
-       <TEXT>____________________</TEXT>
-       <LENGTH>020</LENGTH>
-       <VISLENGTH>020</VISLENGTH>
-       <HEIGHT>001</HEIGHT>
-       <FORMAT>CHAR</FORMAT>
-       <INPUT_FLD>X</INPUT_FLD>
-      </RPY_DYFATC>
-     </FIELDS>
-    </item>
-   </DYNPROS>
    <CUA>
     <ADM>
      <ACTCODE>000002</ACTCODE>
@@ -1954,12 +1920,6 @@
       <INT_NOTE>SALV_TABLE_STANDARD</INT_NOTE>
      </RSMPE_ATRT>
     </DOC>
-    <TIT>
-     <RSMPE_TITT>
-      <CODE>001</CODE>
-      <TEXT>RFC fonksiyonları testi - &amp;1</TEXT>
-     </RSMPE_TITT>
-    </TIT>
    </CUA>
    <TPOOL>
     <item>
